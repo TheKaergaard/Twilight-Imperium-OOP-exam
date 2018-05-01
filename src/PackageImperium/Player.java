@@ -1,4 +1,4 @@
-
+package PackageImperium;
 /*
  * OOP exam 2018
  * Simon Park Kærgaard
@@ -8,6 +8,12 @@
 import java.util.Objects;
 
 public class Player {
+
+    public Player(String playerName, String uniqueRace, String uniqueColour) {
+        this.playerName = playerName;
+        this.uniqueRace = uniqueRace;
+        this.uniqueColour = uniqueColour;
+    }
 
     private String playerName;
     private String uniqueRace;
@@ -41,17 +47,25 @@ public class Player {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Player)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         Player player = (Player) o;
-        return Objects.equals(player, player.playerName);
+        return Objects.equals(playerName, player.playerName) &&
+                Objects.equals(uniqueRace, player.uniqueRace) &&
+                Objects.equals(uniqueColour, player.uniqueColour);
     }
 
     @Override
     public int hashCode() {
-        return Object.hash(playerName);
+        return Objects.hash(playerName, uniqueRace, uniqueColour);
     }
 
-
-
+    @Override
+    public String toString() {
+        return "Player{" +
+                "playerName='" + playerName + '\'' +
+                ", uniqueRace='" + uniqueRace + '\'' +
+                ", uniqueColour='" + uniqueColour + '\'' +
+                '}';
+    }
 
 }
