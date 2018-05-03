@@ -24,12 +24,8 @@ public class Planet {
     }
 
     public void setResourceProduction(int newResourceProduction) {
-        if (newResourceProduction < 0 || newResourceProduction > 6) {
-            throw new IllegalArgumentException();
-        } else {
-            resourceProduction = newResourceProduction;
+        resourceProduction = newResourceProduction;
 
-        }
     }
 
     public String getPlanetName() {
