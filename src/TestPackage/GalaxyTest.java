@@ -13,9 +13,3 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GalaxyTest {
 
     Galaxy testGalaxy = new Galaxy();
-
-    @Test
-    void galaxyTest01 () {
-        assertEquals(testGalaxy.c);
-    }
-}

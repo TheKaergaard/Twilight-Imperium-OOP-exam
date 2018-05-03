@@ -19,9 +19,7 @@ import java.util.HashMap;
 public class Main {
 
     public static void main(String[] args) {
-        Player p1 = new Player("Crassus", "The Emirates of Hacan", "Blue");
-        Player p2 = new Player("Pompey", "The Federation of Sol","Red");
-        Destroyer destroyer01 = new Destroyer(p1);
+
         Planet testPlanet01 = new Planet("Jupiter", 6 );
         Planet testPLanet02 = new Planet("Saturn",3);
 
@@ -37,7 +35,7 @@ public class Main {
 
         Galaxy testgalaxy = new Galaxy();
 
-        testgalaxy.setSystemsIntoGalaxy(testSystem, new Point(1,2));
+        testgalaxy.setSystemsIntoGalaxy(new Point(1,2), testSystem);
 
     }
 }
