@@ -10,9 +10,13 @@ import PackageImperium.Player;
 public class Destroyer implements Unit {
     private Player owner;
 
+    public Destroyer() {
+    }
+
     public Destroyer(Player owner) {
         this.owner = owner;
     }
+
     @Override
     public final Type getUnitType() {
         return Type.DESTROYER;

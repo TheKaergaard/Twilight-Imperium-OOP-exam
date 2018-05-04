@@ -10,6 +10,9 @@ import PackageImperium.Player;
 public class Carrier implements Unit {
     private Player owner;
 
+    public Carrier() {
+    }
+
     public Carrier(Player owner) {
         this.owner = owner;
     }

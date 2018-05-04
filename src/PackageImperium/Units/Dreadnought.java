@@ -10,6 +10,9 @@ import PackageImperium.Player;
 public class Dreadnought implements Unit {
     private Player owner;
 
+    public Dreadnought() {
+    }
+
     public Dreadnought(Player owner) {
         this.owner = owner;
     }

@@ -10,6 +10,9 @@ import PackageImperium.Player;
 public class Cruiser implements Unit {
     private Player owner;
 
+    public Cruiser() {
+    }
+
     public Cruiser(Player owner) {
         this.owner = owner;
     }

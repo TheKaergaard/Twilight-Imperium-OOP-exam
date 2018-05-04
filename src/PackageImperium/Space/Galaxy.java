@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Galaxy {
-    HashMap<Point, SpaceSystem> hexagonalGridOfSystems; //TODO Bytte om på key og value, da keys ikke kan have duplikater
+    HashMap<Point, SpaceSystem> hexagonalGridOfSystems;
     ArrayList<SpaceSystem> listOfSystemsInGalaxy;
     ArrayList<Planet> listOfPlanetsInGalaxy;
     ArrayList<Unit> listOfUnitsInGalaxa;
@@ -41,40 +41,37 @@ public class Galaxy {
         Set<Point> keySet = this.hexagonalGridOfSystems.keySet();
 
         for (Point temp : keySet) {
-            Point northPoint = new Point((int) temp.getX(), (int) temp.getY() + 1);
-            Point northEastPoint = new Point((int) temp.getX() + 1, (int) temp.getY() + 1);
-            Point southEastPoint = new Point((int) temp.getX() + 1, (int) temp.getY() - 1);
-            Point southPoint = new Point((int) temp.getX(), (int) temp.getY() - 1);
-            Point southWestPoint = new Point((int) temp.getX() - 1, (int) temp.getY() - 1);
-            Point northWestPoint = new Point((int) temp.getX() - 1, (int) temp.getY() + 1);
+            Point northCoordinates = new Point((int) temp.getX(), (int) temp.getY() + 1);
+            Point northEastCoordinates = new Point((int) temp.getX() + 1, (int) temp.getY() + 1);
+            Point southEastCoordinates = new Point((int) temp.getX() + 1, (int) temp.getY() - 1);
+            Point southCoordinates = new Point((int) temp.getX(), (int) temp.getY() - 1);
+            Point southWestCoordinates = new Point((int) temp.getX() - 1, (int) temp.getY() - 1);
+            Point northWestCoordinates = new Point((int) temp.getX() - 1, (int) temp.getY() + 1);
 
-            Boolean isNorth = hexagonalGridOfSystems.containsKey(northPoint);
-            Boolean isNorthEast = hexagonalGridOfSystems.containsKey(northEastPoint);
-            Boolean isSouthEast = hexagonalGridOfSystems.containsKey(southEastPoint);
-            Boolean isSouth = hexagonalGridOfSystems.containsKey(southPoint);
-            Boolean isSouthWest = hexagonalGridOfSystems.containsKey(southWestPoint);
-            Boolean isNorthWest = hexagonalGridOfSystems.containsKey(northWestPoint);
+            Boolean isNorth = hexagonalGridOfSystems.containsKey(northCoordinates);
+            Boolean isNorthEast = hexagonalGridOfSystems.containsKey(northEastCoordinates);
+            Boolean isSouthEast = hexagonalGridOfSystems.containsKey(southEastCoordinates);
+            Boolean isSouth = hexagonalGridOfSystems.containsKey(southCoordinates);
+            Boolean isSouthWest = hexagonalGridOfSystems.containsKey(southWestCoordinates);
+            Boolean isNorthWest = hexagonalGridOfSystems.containsKey(northWestCoordinates);
 
             if (isNorth) {
-                hexagonalGridOfSystems.get(temp).setHexagonGrid(SpaceSystem.Position.NORTH, hexagonalGridOfSystems.get(northPoint));
+                hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.NORTH, hexagonalGridOfSystems.get(northCoordinates));
             } else if (isNorthEast) {
-                hexagonalGridOfSystems.get(temp).setHexagonGrid(SpaceSystem.Position.NORTH_EAST, hexagonalGridOfSystems.get(northEastPoint));
+                hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.NORTH_EAST, hexagonalGridOfSystems.get(northEastCoordinates));
             } else if (isSouthEast) {
-                hexagonalGridOfSystems.get(temp).setHexagonGrid(SpaceSystem.Position.SOUTH_EAST, hexagonalGridOfSystems.get(southEastPoint));
+                hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.SOUTH_EAST, hexagonalGridOfSystems.get(southEastCoordinates));
             } else if (isSouth) {
-                hexagonalGridOfSystems.get(temp).setHexagonGrid(SpaceSystem.Position.SOUTH, hexagonalGridOfSystems.get(southPoint));
+                hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.SOUTH, hexagonalGridOfSystems.get(southCoordinates));
             } else if (isSouthWest) {
-                hexagonalGridOfSystems.get(temp).setHexagonGrid(SpaceSystem.Position.SOUTH_WEST, hexagonalGridOfSystems.get(southWestPoint));
+                hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.SOUTH_WEST, hexagonalGridOfSystems.get(southWestCoordinates));
             } else if (isNorthWest) {
-                hexagonalGridOfSystems.get(temp).setHexagonGrid(SpaceSystem.Position.NORTH_WEST, hexagonalGridOfSystems.get(northWestPoint));
+                hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.NORTH_WEST, hexagonalGridOfSystems.get(northWestCoordinates));
             }
         }
     }
 
-    public Galaxy createGalaxyWithPlayers(ArrayList<Planet> planets, ArrayList<SpaceSystem> systems, ArrayList<Player> players) {
-        ArrayList<Planet> planetsInGalaxy = planets;
-        ArrayList<SpaceSystem> systemsInGalaxy = systems;
-
+    public Galaxy createGalaxyWithPlayers() {
         Player p1 = new Player("Crassus", "The Emirates of Hacan", "Blue");
         Player p2 = new Player("Pompey", "The Federation of Sol", "Red");
 
@@ -101,6 +98,7 @@ public class Galaxy {
         Planet rigelII = new Planet("Rigel II", 2);
         Planet mirage = new Planet("Mirage", 3);
 
+        centerSystem.listOfPlanetsInSystem.add(metacolRex);
         northSystem.listOfPlanetsInSystem.add(vegaMinor);
         northSystem.listOfPlanetsInSystem.add(vegaMajor);
         southEastSystem.listOfPlanetsInSystem.add(industrex);
@@ -108,9 +106,9 @@ public class Galaxy {
         southSystem.listOfPlanetsInSystem.add(rigelII);
         northWestSystem.listOfPlanetsInSystem.add(mirage);
 
-        northSystem.listOfShipsInSystem.add(dreadnought01);
-        northSystem.listOfShipsInSystem.add(dreadnought02);
-        northSystem.listOfShipsInSystem.add(destroyer01);
+        centerSystem.listOfShipsInSystem.add(dreadnought01);
+        centerSystem.listOfShipsInSystem.add(dreadnought02);
+        centerSystem.listOfShipsInSystem.add(destroyer01);
         northSystem.listOfShipsInSystem.add(cruiser01);
         northSystem.listOfShipsInSystem.add(cruiser02);
         northSystem.listOfShipsInSystem.add(carrier01);
