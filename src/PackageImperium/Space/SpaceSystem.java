@@ -17,7 +17,7 @@ public class SpaceSystem {
     ArrayList<Unit> listOfShipsInSystem = new ArrayList<>();
     HashMap<Position, SpaceSystem> hexagonalGrid = new HashMap<>();
 
-    enum Position {
+    public enum Position {
         NORTH, NORTH_EAST, NORTH_WEST, SOUTH, SOUTH_EAST, SOUTH_WEST
     }
 
@@ -56,6 +56,10 @@ public class SpaceSystem {
     public void addEnteredShip(Unit shipToAdd) {
         listOfShipsInSystem.add(shipToAdd);
         System.out.println(shipToAdd + "added to system");
+    }
+
+    public HashMap<Position, SpaceSystem> getHexagonalGrid() {
+        return hexagonalGrid;
     }
 
     public void removeLeavedShip(Unit shipToRemove) {

@@ -14,10 +14,10 @@ import java.util.HashMap;
 import java.util.Set;
 
 public class Galaxy {
-    HashMap<Point, SpaceSystem> hexagonalGridOfSystems;
-    ArrayList<SpaceSystem> listOfSystemsInGalaxy;
-    ArrayList<Planet> listOfPlanetsInGalaxy;
-    ArrayList<Unit> listOfUnitsInGalaxa;
+    HashMap<Point, SpaceSystem> hexagonalGridOfSystems = new HashMap<>();
+    ArrayList<SpaceSystem> listOfSystemsInGalaxy = new ArrayList<>();
+    ArrayList<Planet> listOfPlanetsInGalaxy = new ArrayList<>();
+    ArrayList<Unit> listOfUnitsInGalaxa = new ArrayList<>();
 
     public Galaxy() {
     }
@@ -26,17 +26,25 @@ public class Galaxy {
         this.hexagonalGridOfSystems.put(inputPos, inputSystem);
     }
 
-    /*
-    public Galaxy(ArrayList<Planet> listOfPlanetsInGalaxy, ArrayList<SpaceSystem> listOfSystemsInGalaxy, ArrayList<Player> playersInGalaxy) {
-        if (listOfSystemsInGalaxy.size() > 7) {
-            throw new IndexOutOfBoundsException();
-        } else {
-            this.listOfPlanetsInGalaxy = listOfPlanetsInGalaxy;
-        }
-        this.listOfSystemsInGalaxy = listOfSystemsInGalaxy;
-        this.playersInGalaxy = playersInGalaxy;
+    public ArrayList<SpaceSystem> getListOfSystemsInGalaxy() {
+        return listOfSystemsInGalaxy;
     }
-    */
+
+    public HashMap<Point, SpaceSystem> getHexagonalGridOfSystems() {
+        return hexagonalGridOfSystems;
+    }
+
+    /*
+            public Galaxy(ArrayList<Planet> listOfPlanetsInGalaxy, ArrayList<SpaceSystem> listOfSystemsInGalaxy, ArrayList<Player> playersInGalaxy) {
+                if (listOfSystemsInGalaxy.size() > 7) {
+                    throw new IndexOutOfBoundsException();
+                } else {
+                    this.listOfPlanetsInGalaxy = listOfPlanetsInGalaxy;
+                }
+                this.listOfSystemsInGalaxy = listOfSystemsInGalaxy;
+                this.playersInGalaxy = playersInGalaxy;
+            }
+            */
     public void createHexagonalGridOfSystems(HashMap<Point, SpaceSystem> hexagonalGridOfSystems) {
         Set<Point> keySet = this.hexagonalGridOfSystems.keySet();
 
@@ -57,15 +65,20 @@ public class Galaxy {
 
             if (isNorth) {
                 hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.NORTH, hexagonalGridOfSystems.get(northCoordinates));
-            } else if (isNorthEast) {
+            }
+            if (isNorthEast) {
                 hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.NORTH_EAST, hexagonalGridOfSystems.get(northEastCoordinates));
-            } else if (isSouthEast) {
+            }
+            if (isSouthEast) {
                 hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.SOUTH_EAST, hexagonalGridOfSystems.get(southEastCoordinates));
-            } else if (isSouth) {
+            }
+            if (isSouth) {
                 hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.SOUTH, hexagonalGridOfSystems.get(southCoordinates));
-            } else if (isSouthWest) {
+            }
+            if (isSouthWest) {
                 hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.SOUTH_WEST, hexagonalGridOfSystems.get(southWestCoordinates));
-            } else if (isNorthWest) {
+            }
+            if (isNorthWest) {
                 hexagonalGridOfSystems.get(temp).setHexagonalGrid(SpaceSystem.Position.NORTH_WEST, hexagonalGridOfSystems.get(northWestCoordinates));
             }
         }
@@ -74,6 +87,8 @@ public class Galaxy {
     public Galaxy createGalaxyWithPlayers() {
         Player p1 = new Player("Crassus", "The Emirates of Hacan", "Blue");
         Player p2 = new Player("Pompey", "The Federation of Sol", "Red");
+
+        Galaxy galaxy = new Galaxy();
 
         SpaceSystem centerSystem = new SpaceSystem();
         SpaceSystem northSystem = new SpaceSystem();
@@ -113,8 +128,6 @@ public class Galaxy {
         northSystem.listOfShipsInSystem.add(cruiser02);
         northSystem.listOfShipsInSystem.add(carrier01);
 
-        Galaxy galaxy = new Galaxy();
-
         galaxy.setSystemsIntoGalaxy(new Point(0, 0), centerSystem);
         galaxy.setSystemsIntoGalaxy(new Point(0, 1), northSystem);
         galaxy.setSystemsIntoGalaxy(new Point(1, 1), northEastSystem);
@@ -123,8 +136,13 @@ public class Galaxy {
         galaxy.setSystemsIntoGalaxy(new Point(-1, 1), southWestSystem);
         galaxy.setSystemsIntoGalaxy(new Point(-1, 1), northWestSystem);
 
-        createHexagonalGridOfSystems(hexagonalGridOfSystems);
+        galaxy.createHexagonalGridOfSystems(galaxy.getHexagonalGridOfSystems());
 
         return galaxy;
+    }
+
+    public void createLegalGalaxy () {
+        Galaxy legalGalaxy = new Galaxy();
+
     }
 }
