@@ -33,6 +33,7 @@ public class Galaxy {
     public HashMap<Point, SpaceSystem> getHexagonalGridOfSystems() {
         return hexagonalGridOfSystems;
     }
+
     /*
             public Galaxy(ArrayList<Planet> listOfPlanetsInGalaxy, ArrayList<SpaceSystem> listOfSystemsInGalaxy, ArrayList<Player> playersInGalaxy) {
                 if (listOfSystemsInGalaxy.size() > 7) {
@@ -104,7 +105,7 @@ public class Galaxy {
         Cruiser cruiser02 = new Cruiser(p2);
         Carrier carrier01 = new Carrier(p2);
 
-        Planet metacolRex = new Planet("Metacol Rex", 6);
+        Planet mecatolRex = new Planet("Mecatol Rex", 6);
         Planet vegaMinor = new Planet("Vega Minor", 1);
         Planet vegaMajor = new Planet("Vega Major", 3);
         Planet industrex = new Planet("Industrex", 5);
@@ -112,7 +113,7 @@ public class Galaxy {
         Planet rigelII = new Planet("Rigel II", 2);
         Planet mirage = new Planet("Mirage", 3);
 
-        centerSystem.listOfPlanetsInSystem.add(metacolRex);
+        centerSystem.listOfPlanetsInSystem.add(mecatolRex);
         northSystem.listOfPlanetsInSystem.add(vegaMinor);
         northSystem.listOfPlanetsInSystem.add(vegaMajor);
         southEastSystem.listOfPlanetsInSystem.add(industrex);
@@ -140,8 +141,35 @@ public class Galaxy {
         return galaxy;
     }
 
-    public void createLegalGalaxy () {
-        Galaxy legalGalaxy = new Galaxy();
+    public void propertiesForLegalGalaxy(Galaxy legalGalaxy) {
+        //legalGalaxy.createHexagonalGridOfSystems(legalGalaxy.getHexagonalGridOfSystems());
+        HashMap<Point, SpaceSystem> legalHexagonalGrid = legalGalaxy.getHexagonalGridOfSystems();
+        Set<Point> keyset = legalGalaxy.getHexagonalGridOfSystems().keySet();
 
+        SpaceSystem testSystem = new SpaceSystem();
+
+        legalGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem);
+        Planet mecatolRex = new Planet("Mecatol Rex");
+
+        for (Point temp : keyset) {
+            if (legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.size() > 3) {
+                throw new IndexOutOfBoundsException("Too many planets in system");
+            }
+            if (legalGalaxy.getHexagonalGridOfSystems().get(temp).equals(testSystem) && !(legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.contains(mecatolRex))) {
+                try {
+                    throw new InstantiationException("Mecatol Rex not found in center system");
+                } catch (InstantiationException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            //for (int i = 0; i < legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.size(); i++) {
+                /*if (!legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.get(lol).planetName.equals("Mecatol Rex")) {
+                throw new IllegalStateException("Center system does not contain Mecatol Rex planet");
+                */
+        }
     }
 }
+
+
+

@@ -6,6 +6,7 @@ package TestPackage;
  */
 
 import PackageImperium.Space.Galaxy;
+import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,7 @@ import java.util.HashMap;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GalaxyTest {
@@ -68,9 +70,7 @@ class GalaxyTest {
         Set<Point> keyset = systemsInTestGalaxy.keySet();
 
         SpaceSystem lol = new SpaceSystem();
-        if (keyset.contains
-
-                (lol.getHexagonalGrid().get(SpaceSystem.Position.NORTH))) {
+        if (keyset.contains(lol.getHexagonalGrid().get(SpaceSystem.Position.NORTH))) {
 
         }
 
@@ -82,6 +82,37 @@ class GalaxyTest {
     @Test
     void shipsOwnedByPlayers() {
         Galaxy testGalaxyWithPlayers = testGalaxy.createGalaxyWithPlayers();
+        HashMap<Point, SpaceSystem> systemsInTestGalaxy = testGalaxyWithPlayers.getHexagonalGridOfSystems();
+
+        for (Point temp : systemsInTestGalaxy.keySet()) {
+            String value = systemsInTestGalaxy.get(temp).toString();
+            System.out.println(value);
+
+            //System.out.println(testGalaxyWithPlayers.createGalaxyWithPlayers().getHexagonalGridOfSystems().size());
+            //System.out.println(systemsInTestGalaxy.get(temp).allShipsInSystem().get(i).getUnitType());
+
+        }
+
+    }
+    @Test
+    void legalGalaxy01() {
+        SpaceSystem testSystem= new SpaceSystem();
+
+        Planet planet01 = new Planet("planet01",1);
+        Planet planet02 = new Planet("planet02",1);
+        Planet planet03 = new Planet("planet03",1);
+        Planet planet04 = new Planet("planet04",1);
+        Planet mecatolRex = new Planet("Mecatol Rex");
+
+        //testSystem.listOfPlanetsInSystem.add(planet01);
+        //testSystem.listOfPlanetsInSystem.add(planet02);
+        testSystem.listOfPlanetsInSystem.add(mecatolRex);
+        //testSystem.listOfPlanetsInSystem.add(planet04);
+
+        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem);
+        //testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
+
+        testGalaxy.propertiesForLegalGalaxy(testGalaxy);
 
     }
 

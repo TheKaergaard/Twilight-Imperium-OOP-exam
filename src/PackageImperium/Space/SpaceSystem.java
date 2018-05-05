@@ -13,12 +13,12 @@ import java.util.Objects;
 
 public class SpaceSystem {
     private Position position;
-    ArrayList<Planet> listOfPlanetsInSystem = new ArrayList<>();
+    public ArrayList<Planet> listOfPlanetsInSystem = new ArrayList<>();
     ArrayList<Unit> listOfShipsInSystem = new ArrayList<>();
-    HashMap<Position, SpaceSystem> hexagonalGrid = new HashMap<>();
+    public HashMap<Position, SpaceSystem> hexagonalGrid = new HashMap<>();
 
     public enum Position {
-        NORTH, NORTH_EAST, NORTH_WEST, SOUTH, SOUTH_EAST, SOUTH_WEST
+        CENTER, NORTH, NORTH_EAST, NORTH_WEST, SOUTH, SOUTH_EAST, SOUTH_WEST
     }
 
     public SpaceSystem() {

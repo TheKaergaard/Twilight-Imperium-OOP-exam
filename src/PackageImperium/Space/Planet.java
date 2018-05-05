@@ -7,8 +7,12 @@ package PackageImperium.Space;
 
 public class Planet {
 
-    private String planetName;
+    public String planetName;
     private int resourceProduction;
+
+    public Planet(String planetName) {
+        this.planetName = planetName;
+    }
 
     public Planet(String planetName, int resourceProduction) {
         if (resourceProduction < 0 || resourceProduction > 6) {
@@ -27,6 +31,8 @@ public class Planet {
         resourceProduction = newResourceProduction;
 
     }
+
+
 
     public String getPlanetName() {
         return planetName;

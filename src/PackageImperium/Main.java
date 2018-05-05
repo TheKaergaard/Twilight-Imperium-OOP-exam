@@ -40,7 +40,7 @@ public class Main {
         HashMap<Point, SpaceSystem> systemsInGalaxy = testGalaxy.getHexagonalGridOfSystems();
 
         Set<Point> keyset = testGalaxy.getHexagonalGridOfSystems().keySet();
-
+        testGalaxy.propertiesForLegalGalaxy(testGalaxy);
         for (Point temp : keyset) {
             System.out.println("hej");
         }
