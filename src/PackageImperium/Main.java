@@ -9,19 +9,18 @@ package PackageImperium;
 import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
-import PackageImperium.Units.Destroyer;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Planet testPlanet01 = new Planet("Jupiter", 6 );
-        Planet testPLanet02 = new Planet("Saturn",3);
+        Planet testPlanet01 = new Planet("Jupiter", 6);
+        Planet testPLanet02 = new Planet("Saturn", 3);
 
         HashMap<SpaceSystem, Point> hashmap = new HashMap<>();
 
@@ -35,7 +34,15 @@ public class Main {
 
         Galaxy testgalaxy = new Galaxy();
 
-        testgalaxy.setSystemsIntoGalaxy(new Point(1,2), testSystem);
+        testgalaxy.setSystemsIntoGalaxy(new Point(1, 2), testSystem);
 
+        Galaxy testGalaxy = new Galaxy();
+        HashMap<Point, SpaceSystem> systemsInGalaxy = testGalaxy.getHexagonalGridOfSystems();
+
+        Set<Point> keyset = testGalaxy.getHexagonalGridOfSystems().keySet();
+
+        for (Point temp : keyset) {
+            System.out.println("hej");
+        }
     }
 }

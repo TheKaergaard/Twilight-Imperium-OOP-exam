@@ -29,20 +29,15 @@ public class SpaceSystem {
     }
 
     public void setListOfPlanetsInSystem(ArrayList<Planet> listOfPlanetsInSystem) {
-        this.listOfPlanetsInSystem = listOfPlanetsInSystem;
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-    //Constructor for System. Max check for amount of planets
-    public SpaceSystem(Position position, ArrayList<Planet> listOfPlanetsInSystem) {
-        this.position = position;
         if (listOfPlanetsInSystem.size() < 3) {
             throw new IndexOutOfBoundsException();
         } else {
             this.listOfPlanetsInSystem = listOfPlanetsInSystem;
         }
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public void setHexagonalGrid(Position tempPos, SpaceSystem tempSystem) {
@@ -53,13 +48,13 @@ public class SpaceSystem {
         return position;
     }
 
+    public HashMap<Position, SpaceSystem> getHexagonalGrid() {
+        return hexagonalGrid;
+    }
+
     public void addEnteredShip(Unit shipToAdd) {
         listOfShipsInSystem.add(shipToAdd);
         System.out.println(shipToAdd + "added to system");
-    }
-
-    public HashMap<Position, SpaceSystem> getHexagonalGrid() {
-        return hexagonalGrid;
     }
 
     public void removeLeavedShip(Unit shipToRemove) {

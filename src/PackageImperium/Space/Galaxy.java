@@ -33,7 +33,6 @@ public class Galaxy {
     public HashMap<Point, SpaceSystem> getHexagonalGridOfSystems() {
         return hexagonalGridOfSystems;
     }
-
     /*
             public Galaxy(ArrayList<Planet> listOfPlanetsInGalaxy, ArrayList<SpaceSystem> listOfSystemsInGalaxy, ArrayList<Player> playersInGalaxy) {
                 if (listOfSystemsInGalaxy.size() > 7) {

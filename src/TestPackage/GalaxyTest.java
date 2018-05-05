@@ -7,19 +7,21 @@ package TestPackage;
 
 import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.SpaceSystem;
+import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import java.awt.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 class GalaxyTest {
+    Galaxy testGalaxy = new Galaxy();
+
     @Test
     void positionOfSystemsNorthSouth() {
-        Galaxy testGalaxy = new Galaxy();
 
         SpaceSystem system01 = new SpaceSystem();
         SpaceSystem system02 = new SpaceSystem();
@@ -27,15 +29,13 @@ class GalaxyTest {
         testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), system01);
         testGalaxy.setSystemsIntoGalaxy(new Point(0, -1), system02);
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
-
+        //
         assertEquals(system01, system02.getHexagonalGrid().get(SpaceSystem.Position.NORTH));
         assertEquals(system02, system01.getHexagonalGrid().get(SpaceSystem.Position.SOUTH));
     }
 
     @Test
     void positionOfSystemsNESW() {
-        Galaxy testGalaxy = new Galaxy();
-
         SpaceSystem system01 = new SpaceSystem();
         SpaceSystem system02 = new SpaceSystem();
 
@@ -49,8 +49,6 @@ class GalaxyTest {
 
     @Test
     void positionOfSystemsNWSE() {
-        Galaxy testGalaxy = new Galaxy();
-
         SpaceSystem system01 = new SpaceSystem();
         SpaceSystem system02 = new SpaceSystem();
 
@@ -64,15 +62,33 @@ class GalaxyTest {
 
     @Test
     void creationOfGalaxyWithPlayers() {
-        Galaxy testGalaxy = new Galaxy();
-        HashMap<Point, SpaceSystem> systemsInGalaxy = testGalaxy.getHexagonalGridOfSystems();
+        Galaxy testGalaxyWithPlayers = testGalaxy.createGalaxyWithPlayers();
+        HashMap<Point, SpaceSystem> systemsInTestGalaxy = testGalaxyWithPlayers.getHexagonalGridOfSystems();
 
-        Set<Point> keyset = systemsInGalaxy.keySet();
+        Set<Point> keyset = systemsInTestGalaxy.keySet();
 
-        for (Point temp : keyset) {
-            testGalaxy.getHexagonalGridOfSystems().
+        SpaceSystem lol = new SpaceSystem();
+        if (keyset.contains
+
+                (lol.getHexagonalGrid().get(SpaceSystem.Position.NORTH))) {
+
         }
 
+        assertTrue(systemsInTestGalaxy.containsKey(new Point(0, 0)));
 
+        System.out.println(keyset.size());
+    }
+
+    @Test
+    void shipsOwnedByPlayers() {
+        Galaxy testGalaxyWithPlayers = testGalaxy.createGalaxyWithPlayers();
+
+    }
+
+    @Ignore
+    void sizeOfCreatedGalaxyWithPlayers() {
+        Galaxy testGalaxy02 = testGalaxy.createGalaxyWithPlayers();
+
+        assertEquals(7, testGalaxy02.getHexagonalGridOfSystems().size());
     }
 }
