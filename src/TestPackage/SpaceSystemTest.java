@@ -6,6 +6,7 @@ package TestPackage;
  */
 
 import PackageImperium.Space.SpaceSystem;
+import PackageImperium.Units.Carrier;
 import PackageImperium.Units.Dreadnought;
 import PackageImperium.Units.Unit;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SpaceSystemTest {
     private SpaceSystem testSystem = new SpaceSystem();
     private Dreadnought testShip = new Dreadnought();
+    private Carrier testShip02 = new Carrier();
     private ArrayList<Unit> temp;
 
     @Test
@@ -37,7 +39,9 @@ class SpaceSystemTest {
     @Test
     void allShipsInSystem () {
         testSystem.addEnteredShip(testShip);
+        testSystem.addEnteredShip(testShip02);
         temp = testSystem.allShipsInSystem();
         assertEquals(temp.get(0).getUnitType(),Unit.Type.DREADNOUGHT);
+        assertEquals(temp.get(1).getUnitType(),Unit.Type.CARRIER);
     }
 }

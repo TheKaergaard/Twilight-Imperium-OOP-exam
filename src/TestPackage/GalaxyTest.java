@@ -8,10 +8,12 @@ package TestPackage;
 import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
+import PackageImperium.Units.*;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -21,6 +23,41 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GalaxyTest {
     Galaxy testGalaxy = new Galaxy();
+
+    @Test
+    void gettingAllShipsInGalaxy () {
+        SpaceSystem testSystem = new SpaceSystem();
+        Destroyer d1 = new Destroyer();
+        Cruiser c1 = new Cruiser();
+        Dreadnought d2 = new Dreadnought();
+        Carrier c2 = new Carrier();
+        testSystem.listOfShipsInSystem.add(d1);
+        testSystem.listOfShipsInSystem.add(c1);
+        testSystem.listOfShipsInSystem.add(c2);
+        testSystem.listOfShipsInSystem.add(d2);
+
+        testGalaxy.setSystemsIntoGalaxy(new Point(0,0), testSystem);
+
+        ArrayList<Unit> ships = testGalaxy.listOfShipsInGalaxy();
+
+        for (Unit unit : ships) {
+            System.out.println(unit.getUnitType());
+        }
+    }
+
+    @Test
+    void gettingListOfSystemsInGalaxy () {
+        SpaceSystem testSystem01 = new SpaceSystem();
+        SpaceSystem testSystem02 = new SpaceSystem();
+
+        testGalaxy.setSystemsIntoGalaxy(new Point(0,0), testSystem01);
+        testGalaxy.setSystemsIntoGalaxy(new Point(0,1), testSystem02);
+        //testing for size of the returned array
+        assertEquals(2, testGalaxy.listOfSystemsInGalaxy().size());
+
+        assertEquals(testSystem01,testGalaxy.listOfSystemsInGalaxy().get(0));
+        assertEquals(testSystem02,testGalaxy.listOfSystemsInGalaxy().get(1));
+    }
 
     @Test
     void positionOfSystemsNorthSouth() {
@@ -92,7 +129,6 @@ class GalaxyTest {
             //System.out.println(systemsInTestGalaxy.get(temp).allShipsInSystem().get(i).getUnitType());
 
         }
-
     }
     @Test
     void legalGalaxy01() {
@@ -119,6 +155,8 @@ class GalaxyTest {
 
         testGalaxy.propertiesForLegalGalaxy(testGalaxy);
     }
+
+
 
     @Ignore
     void sizeOfCreatedGalaxyWithPlayers() {

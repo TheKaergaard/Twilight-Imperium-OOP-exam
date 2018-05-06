@@ -32,9 +32,6 @@ public class Main {
         SpaceSystem testSystem = new SpaceSystem();
 
 
-        Galaxy testgalaxy = new Galaxy();
-
-        testgalaxy.setSystemsIntoGalaxy(new Point(1, 2), testSystem);
 
         Galaxy testGalaxy = new Galaxy();
         HashMap<Point, SpaceSystem> systemsInGalaxy = testGalaxy.getHexagonalGridOfSystems();

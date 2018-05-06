@@ -14,7 +14,7 @@ import java.util.Objects;
 public class SpaceSystem {
     private Position position;
     public ArrayList<Planet> listOfPlanetsInSystem = new ArrayList<>();
-    ArrayList<Unit> listOfShipsInSystem = new ArrayList<>();
+    public ArrayList<Unit> listOfShipsInSystem = new ArrayList<>();
     public HashMap<Position, SpaceSystem> hexagonalGrid = new HashMap<>();
 
     public enum Position {
@@ -65,7 +65,6 @@ public class SpaceSystem {
             System.out.println(shipToRemove + "does not exist in system");
         }
     }
-
     //Returning all ships in the system as ArrayList
     public ArrayList<Unit> allShipsInSystem() {
         ArrayList<Unit> allShipsInSystem = new ArrayList<>();
@@ -79,12 +78,15 @@ public class SpaceSystem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         SpaceSystem that = (SpaceSystem) o;
-        return Objects.equals(hexagonalGrid, that.hexagonalGrid);
+        return position == that.position &&
+                Objects.equals(listOfPlanetsInSystem, that.listOfPlanetsInSystem) &&
+                Objects.equals(listOfShipsInSystem, that.listOfShipsInSystem) &&
+                Objects.equals(hexagonalGrid, that.hexagonalGrid);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(hexagonalGrid);
+        return Objects.hash(position, listOfPlanetsInSystem, listOfShipsInSystem, hexagonalGrid);
     }
 }

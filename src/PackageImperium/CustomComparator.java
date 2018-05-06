@@ -12,13 +12,20 @@ import java.util.Comparator;
 public class CustomComparator implements Comparator<Unit> {
 
     @Override
-    public int compare(Unit unit1, Unit unit2){
-        if (unit1.getCombatValue() > unit2.getCombatValue()) {
-            return 1;
-        } else if (unit1.getCombatValue() < unit2.getCombatValue()) {
-            return 1;
-        } else {
-            return 0;
+    public int compare(Unit unit1, Unit unit2) {
+
+        Integer cbv1 = unit1.getCombatValue();
+        Integer cbv2 = unit2.getCombatValue();
+        int foo = cbv1.compareTo(cbv2);
+        if (foo != 0) {
+            return foo;
         }
+        Integer rc1 = unit1.getResourceCost();
+        Integer rc2 = unit2.getResourceCost();
+        int bar = rc1.compareTo(rc2);
+        if (bar != 0) {
+            return bar;
+        }
+        return 0;
     }
 }

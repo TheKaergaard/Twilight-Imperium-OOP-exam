@@ -13,9 +13,6 @@ import java.util.*;
 
 public class Galaxy {
     HashMap<Point, SpaceSystem> hexagonalGridOfSystems = new HashMap<>();
-    ArrayList<SpaceSystem> listOfSystemsInGalaxy = new ArrayList<>();
-    ArrayList<Planet> listOfPlanetsInGalaxy = new ArrayList<>();
-    ArrayList<Unit> listOfUnitsInGalaxa = new ArrayList<>();
 
     public Galaxy() {
     }
@@ -24,26 +21,28 @@ public class Galaxy {
         this.hexagonalGridOfSystems.put(inputPos, inputSystem);
     }
 
-    /*
-    public ArrayList<SpaceSystem> getListOfSystemsInGalaxy() {
-        return listOfSystemsInGalaxy;
-    }
-    */
     public HashMap<Point, SpaceSystem> getHexagonalGridOfSystems() {
         return hexagonalGridOfSystems;
     }
 
+    public ArrayList<SpaceSystem> listOfSystemsInGalaxy() {
+        ArrayList<SpaceSystem> allSystemsInGalaxy = new ArrayList<>();
+        allSystemsInGalaxy.addAll(this.hexagonalGridOfSystems.values());
+        return allSystemsInGalaxy;
+    }
+
     public ArrayList<Unit> listOfShipsInGalaxy () {
+        ArrayList<SpaceSystem> systems = listOfSystemsInGalaxy();
         ArrayList<Unit> units = new ArrayList<>();
-        for(SpaceSystem temp : this.listOfSystemsInGalaxy) {
-            units.addAll(temp.listOfShipsInSystem);
+        for(SpaceSystem temp : systems) {
+            units.addAll(temp.allShipsInSystem());
         }
         return units;
     }
 
     public ArrayList<Planet> listOfPlanetsInGalaxy () {
         ArrayList<Planet> planets = new ArrayList<>();
-        for(SpaceSystem temp : this.listOfSystemsInGalaxy) {
+        for(SpaceSystem temp : this.listOfSystemsInGalaxy()) {
             planets.addAll(temp.listOfPlanetsInSystem);
         }
         return planets;
