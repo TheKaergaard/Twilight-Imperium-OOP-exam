@@ -5,9 +5,14 @@ package PackageImperium;
  * skarga17@student.aau.dk
  */
 
-import java.util.Objects;
+import PackageImperium.Space.Galaxy;
+import PackageImperium.Space.SpaceSystem;
+import PackageImperium.Units.Unit;
 
-public class Player {
+import java.awt.*;
+import java.util.*;
+
+public class Player extends CustomComparator {
 
     public Player(String playerName, String uniqueRace, String uniqueColour) {
         this.playerName = playerName;
@@ -43,6 +48,27 @@ public class Player {
     public String getUniqueColour() {
         return uniqueColour;
     }
+
+    public ArrayList<Unit> ShipsOwnedByPlayer (Player inputPlayer, Galaxy inputGalaxy) {
+        ArrayList<Unit> listOfShips = inputGalaxy.listOfShipsInGalaxy();
+        ArrayList<Unit> shipsOwnedByInputPlayer = new ArrayList<>();
+        ArrayList<Unit> sortedShips = new ArrayList<>();
+
+        //HashMap<Point, SpaceSystem> mapOfGalaxy = inputGalaxy.getHexagonalGridOfSystems();
+        //Set<Point> keyset = inputGalaxy.getHexagonalGridOfSystems().keySet();
+
+        for (Unit ship : listOfShips) {
+            if(ship.getOwner().equals(inputPlayer)) {
+                shipsOwnedByInputPlayer.add(ship);
+            }
+        }
+        for (Unit ship : shipsOwnedByInputPlayer) {
+            compare(ship, ship);
+        }
+        
+        return ;
+    }
+
 
     @Override
     public boolean equals(Object o) {

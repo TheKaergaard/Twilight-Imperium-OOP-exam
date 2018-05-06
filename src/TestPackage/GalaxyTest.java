@@ -96,7 +96,8 @@ class GalaxyTest {
     }
     @Test
     void legalGalaxy01() {
-        SpaceSystem testSystem= new SpaceSystem();
+        SpaceSystem testSystem = new SpaceSystem();
+        SpaceSystem testSystem02 = new SpaceSystem();
 
         Planet planet01 = new Planet("planet01",1);
         Planet planet02 = new Planet("planet02",1);
@@ -104,16 +105,19 @@ class GalaxyTest {
         Planet planet04 = new Planet("planet04",1);
         Planet mecatolRex = new Planet("Mecatol Rex");
 
-        //testSystem.listOfPlanetsInSystem.add(planet01);
+        testSystem.listOfPlanetsInSystem.add(planet01);
+        testSystem02.listOfPlanetsInSystem.add(planet01);
+        testSystem02.listOfPlanetsInSystem.add(planet01);
+
         //testSystem.listOfPlanetsInSystem.add(planet02);
-        testSystem.listOfPlanetsInSystem.add(mecatolRex);
+        //testSystem.listOfPlanetsInSystem.add(mecatolRex);
         //testSystem.listOfPlanetsInSystem.add(planet04);
 
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem);
+        //testGalaxy.setSystemsIntoGalaxy(new Point(0, 1), testSystem);
+        testGalaxy.setSystemsIntoGalaxy(new Point(1,0), testSystem02);
         //testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
 
         testGalaxy.propertiesForLegalGalaxy(testGalaxy);
-
     }
 
     @Ignore

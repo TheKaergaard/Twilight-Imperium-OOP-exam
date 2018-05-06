@@ -9,9 +9,7 @@ import PackageImperium.Player;
 import PackageImperium.Units.*;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Set;
+import java.util.*;
 
 public class Galaxy {
     HashMap<Point, SpaceSystem> hexagonalGridOfSystems = new HashMap<>();
@@ -26,12 +24,29 @@ public class Galaxy {
         this.hexagonalGridOfSystems.put(inputPos, inputSystem);
     }
 
+    /*
     public ArrayList<SpaceSystem> getListOfSystemsInGalaxy() {
         return listOfSystemsInGalaxy;
     }
-
+    */
     public HashMap<Point, SpaceSystem> getHexagonalGridOfSystems() {
         return hexagonalGridOfSystems;
+    }
+
+    public ArrayList<Unit> listOfShipsInGalaxy () {
+        ArrayList<Unit> units = new ArrayList<>();
+        for(SpaceSystem temp : this.listOfSystemsInGalaxy) {
+            units.addAll(temp.listOfShipsInSystem);
+        }
+        return units;
+    }
+
+    public ArrayList<Planet> listOfPlanetsInGalaxy () {
+        ArrayList<Planet> planets = new ArrayList<>();
+        for(SpaceSystem temp : this.listOfSystemsInGalaxy) {
+            planets.addAll(temp.listOfPlanetsInSystem);
+        }
+        return planets;
     }
 
     /*
@@ -142,26 +157,40 @@ public class Galaxy {
     }
 
     public void propertiesForLegalGalaxy(Galaxy legalGalaxy) {
-        //legalGalaxy.createHexagonalGridOfSystems(legalGalaxy.getHexagonalGridOfSystems());
         HashMap<Point, SpaceSystem> legalHexagonalGrid = legalGalaxy.getHexagonalGridOfSystems();
         Set<Point> keyset = legalGalaxy.getHexagonalGridOfSystems().keySet();
+        Set<SpaceSystem> values = new HashSet<>(legalHexagonalGrid.values());
 
-        SpaceSystem testSystem = new SpaceSystem();
-
-        legalGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem);
-        Planet mecatolRex = new Planet("Mecatol Rex");
-
+        //Every system has at most three planets
         for (Point temp : keyset) {
-            if (legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.size() > 3) {
-                throw new IndexOutOfBoundsException("Too many planets in system");
-            }
-            if (legalGalaxy.getHexagonalGridOfSystems().get(temp).equals(testSystem) && !(legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.contains(mecatolRex))) {
+            if (legalHexagonalGrid.get(temp).listOfPlanetsInSystem.size() > 3) {
                 try {
-                    throw new InstantiationException("Mecatol Rex not found in center system");
-                } catch (InstantiationException e) {
+                    throw new IndexOutOfBoundsException("Too many planets in system");
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
+            //TODO make sure only one planet in Center system
+            //The center system must have exactly one planet named Mecatol Rex
+            if (!temp.equals(new Point(0, 0)) && legalHexagonalGrid.get(temp).listOfPlanetsInSystem.get(0).planetName.equals("Mecatol Rex")) {
+                try {
+                    throw new Exception("Planet Metacol Rex does not exist in center system (0,0)");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                for (Planet tempPlanet : legalHexagonalGrid.get(temp).listOfPlanetsInSystem) {
+                    int frequency = Collections.frequency(values, tempPlanet);
+                    if (frequency > 1) {
+                        try {
+                            throw new Exception("Planet" + tempPlanet + "occours in multiple Systems");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+            }
+
 
             //for (int i = 0; i < legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.size(); i++) {
                 /*if (!legalGalaxy.getHexagonalGridOfSystems().get(temp).listOfPlanetsInSystem.get(lol).planetName.equals("Mecatol Rex")) {
