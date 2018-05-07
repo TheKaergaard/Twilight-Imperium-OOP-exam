@@ -10,10 +10,7 @@ import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.Unit;
 
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 
@@ -74,23 +71,21 @@ public class Player extends CustomComparator {
     public ArrayList<SpaceSystem> listOfSystemsOwnedByOnePlayer(Galaxy inputGalaxy) {
         ArrayList<SpaceSystem> allSystemsInGalaxy = inputGalaxy.listOfSystemsInGalaxy();
         ArrayList<SpaceSystem> systemsOwnedByPlayer = new ArrayList<>();
-        Player firstPlayer = null;
         Boolean isOwned = true;
 
         //Goes through all systems in the input galaxy and then the units in each system.
         for (SpaceSystem temp : allSystemsInGalaxy) {
-            isOwned = true;
+            Player onlyPlayerInSystem = null;
             for (Unit unit : temp.allShipsInSystem()) {
                 //firstPlayer is only null once. Then it will be written over by the found player
-                if (firstPlayer == null) {
-                    firstPlayer = unit.getOwner();
-                }
-                if (!unit.getOwner().equals(firstPlayer)) {
+                if (onlyPlayerInSystem == null) {
+                    onlyPlayerInSystem = unit.getOwner();
+                    isOwned = true;
+                } else if (unit.getOwner().equals(onlyPlayerInSystem)) {
+                    isOwned = true;
+                } else {
                     isOwned = false;
                     break;
-                }
-                else {
-                    isOwned = true;
                 }
             }
             if (isOwned) {
@@ -100,17 +95,21 @@ public class Player extends CustomComparator {
         return systemsOwnedByPlayer;
     }
 
+    public void createTextFileOfPlayerOwnedPlanets(Galaxy inputGalaxy) {
+        Player tempPlayer = new Player();
+        ArrayList<SpaceSystem> playerOwnedSystems = tempPlayer.listOfSystemsOwnedByOnePlayer(inputGalaxy);
 
-    public void createTextFileOfPlayerOwnedPlanets(Player inputPlayer) {
-
-
-        /*
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/planets_owned_by_player.txt", true)))) {
-            out.print();
+        File textfile = new File("src/PackageImperium/player_owned_systems_in_galaxy.txt");
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/player_owned_systems_in_galaxy.txt", true)))) {
+            for (SpaceSystem temp : playerOwnedSystems) {
+                for (int i = 0; i < temp.listOfPlanetsInSystem.size(); i++) {
+                    out.write(temp.listOfPlanetsInSystem.get(i).planetName + "\n");
+                }
+            }
+            out.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Could not write to the given .txt file");
         }
-        */
     }
 
     @Override

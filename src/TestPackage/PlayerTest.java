@@ -7,6 +7,7 @@ package TestPackage;
 
 import PackageImperium.Player;
 import PackageImperium.Space.Galaxy;
+import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.*;
 import org.junit.Ignore;
@@ -57,15 +58,12 @@ class PlayerTest {
         SpaceSystem system02 = new SpaceSystem();
         SpaceSystem system03 = new SpaceSystem();
         SpaceSystem system04 = new SpaceSystem();
+        SpaceSystem system05 = new SpaceSystem();
 
         Dreadnought d1 = new Dreadnought(p1);
         Dreadnought d2 = new Dreadnought(p2);
 
-
         system01.addEnteredShip(d1);
-
-        system04.addEnteredShip(d1);
-        system04.addEnteredShip(d1);
 
         system02.addEnteredShip(d1);
         system02.addEnteredShip(d2);
@@ -74,14 +72,64 @@ class PlayerTest {
         system03.addEnteredShip(d2);
         system03.addEnteredShip(d1);
 
+        system04.addEnteredShip(d1);
+        system04.addEnteredShip(d1);
+
+        system05.addEnteredShip(d2);
+
         testGalaxy.setSystemsIntoGalaxy(new Point(0,1), system01);
         testGalaxy.setSystemsIntoGalaxy(new Point(1,0), system02);
         testGalaxy.setSystemsIntoGalaxy(new Point(-1,0), system03);
+        testGalaxy.setSystemsIntoGalaxy(new Point(0,-1),system04);
+        testGalaxy.setSystemsIntoGalaxy(new Point(1,1),system05);
 
         ArrayList<SpaceSystem> systemsOwnedByFirstPlayer = p2.listOfSystemsOwnedByOnePlayer(testGalaxy);
-        System.out.println(systemsOwnedByFirstPlayer.size());
+
         assertEquals(systemsOwnedByFirstPlayer.get(0),system01);
         assertEquals(systemsOwnedByFirstPlayer.get(1),system04);
+        assertEquals(systemsOwnedByFirstPlayer.get(2),system05);
+    }
+
+    @Test
+    void creationOfTextFileOfPlayersAndThePlanetsTheyControl () {
+        Player testPlayer = new Player();
+        Galaxy temp = new Galaxy();
+
+        SpaceSystem system01 = new SpaceSystem();
+        SpaceSystem system02 = new SpaceSystem();
+        SpaceSystem system03 = new SpaceSystem();
+        SpaceSystem system04 = new SpaceSystem();
+        SpaceSystem system05 = new SpaceSystem();
+
+        Planet testPlanet01 = new Planet("Planet1");
+        Planet testPlanet02 = new Planet("Planet2");
+        Planet testPlanet03 = new Planet("Planet3");
+        Planet testPlanet04 = new Planet("Planet4");
+        Planet testPlanet05 = new Planet("Planet5");
+        Planet testPlanet06 = new Planet("Planet6");
+
+        system01.listOfPlanetsInSystem.add(testPlanet01);
+        system01.listOfPlanetsInSystem.add(testPlanet02);
+        system02.listOfPlanetsInSystem.add(testPlanet03);
+        system02.listOfPlanetsInSystem.add(testPlanet04);
+        system03.listOfPlanetsInSystem.add(testPlanet05);
+        system03.listOfPlanetsInSystem.add(testPlanet06);
+
+        Dreadnought d1 = new Dreadnought(testPlayer);
+        Dreadnought d2 = new Dreadnought(testPlayer);
+
+        system01.addEnteredShip(d1);
+        system02.addEnteredShip(d1);
+        system02.addEnteredShip(d2);
+        system03.addEnteredShip(d1);
+        system03.addEnteredShip(d2);
+        system03.addEnteredShip(d1);
+
+        temp.setSystemsIntoGalaxy(new Point(0,1), system01);
+        temp.setSystemsIntoGalaxy(new Point(1,0), system02);
+        temp.setSystemsIntoGalaxy(new Point(-1,0), system03);
+
+        testPlayer.createTextFileOfPlayerOwnedPlanets(temp);
     }
 
     @Ignore
