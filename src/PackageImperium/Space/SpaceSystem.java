@@ -5,11 +5,13 @@ package PackageImperium.Space;
  * skarga17@student.aau.dk
  */
 
-import PackageImperium.Units.Unit;
+import PackageImperium.Player;
+import PackageImperium.Units.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
 
 public class SpaceSystem {
     private Position position;
@@ -52,6 +54,17 @@ public class SpaceSystem {
         return hexagonalGrid;
     }
 
+    //Looks through all units in system and gets the individually players
+    public ArrayList<Player> listOfPlayersInSystem() {
+        ArrayList<Player> playersInSystem = new ArrayList<>();
+        for (Unit unit : allShipsInSystem()) {
+            if (!playersInSystem.contains(unit.getOwner())) {
+                playersInSystem.add(unit.getOwner());
+            }
+        }
+        return playersInSystem;
+    }
+
     public void addEnteredShip(Unit shipToAdd) {
         listOfShipsInSystem.add(shipToAdd);
         System.out.println(shipToAdd + "added to system");
@@ -65,6 +78,7 @@ public class SpaceSystem {
             System.out.println(shipToRemove + "does not exist in system");
         }
     }
+
     //Returning all ships in the system as ArrayList
     public ArrayList<Unit> allShipsInSystem() {
         ArrayList<Unit> allShipsInSystem = new ArrayList<>();
@@ -73,20 +87,68 @@ public class SpaceSystem {
         return allShipsInSystem;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        SpaceSystem that = (SpaceSystem) o;
-        return position == that.position &&
-                Objects.equals(listOfPlanetsInSystem, that.listOfPlanetsInSystem) &&
-                Objects.equals(listOfShipsInSystem, that.listOfShipsInSystem) &&
-                Objects.equals(hexagonalGrid, that.hexagonalGrid);
+    public Player createRandomPlayer() {
+        Player randomPlayer = new Player();
+        Random rnd = new Random();
+        int amountOfPlayers = rnd.nextInt(4) + 2;
+        //Creates a random player between 2-6
+        for (int i = 0; i < amountOfPlayers; i++) {
+            randomPlayer.setPlayerName("Player" + i);
+            randomPlayer.setUniqueRace("Race" + i);
+            randomPlayer.setUniqueColour("Colour" + i);
+        }
+        return randomPlayer;
     }
 
-    @Override
-    public int hashCode() {
+    public ArrayList<Unit> generateRandomUnits() {
+        ArrayList<Unit> listOfRandomUnits = new ArrayList<>();
+        Random rnd = new Random();
+        //+1 secures at least one unit per player
+        int amountOfUnits = rnd.nextInt(5)+1;
 
-        return Objects.hash(position, listOfPlanetsInSystem, listOfShipsInSystem, hexagonalGrid);
+        for (int i = 0; i < amountOfUnits; i++) {
+            int unitToCreate = rnd.nextInt(4);
+            switch (unitToCreate) {
+                case 0:
+                    Destroyer destroyer = new Destroyer(createRandomPlayer());
+                    listOfRandomUnits.add(destroyer);
+                    break;
+                case 1:
+                    Cruiser cruiser = new Cruiser(createRandomPlayer());
+                    listOfRandomUnits.add(cruiser);
+                    break;
+                case 2:
+                    Carrier carrier = new Carrier(createRandomPlayer());
+                    listOfRandomUnits.add(carrier);
+                    break;
+                case 3:
+                    Dreadnought dreadnought = new Dreadnought(createRandomPlayer());
+                    listOfRandomUnits.add(dreadnought);
+                    break;
+            }
+        }
+        return listOfRandomUnits;
     }
+
+    public ArrayList<Planet> generateRandomPlanets() {
+        ArrayList<Planet> listOfRandomPlanets = new ArrayList<>();
+        Random rnd = new Random();
+        int amountOfPlanets = rnd.nextInt(3)+1;
+
+
+        for (int i = 0; i < amountOfPlanets; i++) {
+            int resourceProduction = rnd.nextInt(6);
+            Planet temp = new Planet("Planet" + i, resourceProduction);
+            listOfRandomPlanets.add(temp);
+        }
+        return listOfRandomPlanets;
+    }
+
+    public SpaceSystem generateRandomSysten() {
+        SpaceSystem randomSystem = new SpaceSystem();
+        randomSystem.allShipsInSystem().addAll(generateRandomUnits());
+        randomSystem.listOfPlanetsInSystem.addAll(generateRandomPlanets());
+        return randomSystem;
+    }
+
 }

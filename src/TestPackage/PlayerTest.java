@@ -92,7 +92,7 @@ class PlayerTest {
 
     @Test
     void creationOfTextFileOfPlayersAndThePlanetsTheyControl () {
-        Player testPlayer = new Player();
+        Player testPlayer = new Player("Hej", "Hej","hej");
         Galaxy temp = new Galaxy();
 
         SpaceSystem system01 = new SpaceSystem();
@@ -129,8 +129,9 @@ class PlayerTest {
         temp.setSystemsIntoGalaxy(new Point(1,0), system02);
         temp.setSystemsIntoGalaxy(new Point(-1,0), system03);
 
-        testPlayer.createTextFileOfPlayerOwnedPlanets(temp);
+        testPlayer.createTextFileOfPlayerOwnedPlanets(temp, "player_owned_systems_in_galaxy");
     }
+
 
     @Ignore
     void sortedListOfShipsFromPlayer02(){

@@ -32,8 +32,6 @@ public class Planet {
 
     }
 
-
-
     public String getPlanetName() {
         return planetName;
     }

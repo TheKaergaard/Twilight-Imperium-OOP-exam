@@ -5,6 +5,7 @@ package PackageImperium.Space;
  * skarga17@student.aau.dk
  */
 
+import PackageImperium.CustomException01;
 import PackageImperium.Player;
 import PackageImperium.Units.*;
 
@@ -31,18 +32,18 @@ public class Galaxy {
         return allSystemsInGalaxy;
     }
 
-    public ArrayList<Unit> listOfShipsInGalaxy () {
+    public ArrayList<Unit> listOfShipsInGalaxy() {
         ArrayList<SpaceSystem> systems = listOfSystemsInGalaxy();
         ArrayList<Unit> units = new ArrayList<>();
-        for(SpaceSystem temp : systems) {
+        for (SpaceSystem temp : systems) {
             units.addAll(temp.allShipsInSystem());
         }
         return units;
     }
 
-    public ArrayList<Planet> listOfPlanetsInGalaxy () {
+    public ArrayList<Planet> listOfPlanetsInGalaxy() {
         ArrayList<Planet> planets = new ArrayList<>();
-        for(SpaceSystem temp : this.listOfSystemsInGalaxy()) {
+        for (SpaceSystem temp : this.listOfSystemsInGalaxy()) {
             planets.addAll(temp.listOfPlanetsInSystem);
         }
         return planets;
@@ -65,10 +66,10 @@ public class Galaxy {
         for (Point temp : keySet) {
             Point northCoordinates = new Point((int) temp.getX(), (int) temp.getY() + 1);
             Point northEastCoordinates = new Point((int) temp.getX() + 1, (int) temp.getY() + 1);
-            Point southEastCoordinates = new Point((int) temp.getX() + 1, (int) temp.getY() - 1);
+            Point southEastCoordinates = new Point((int) temp.getX() + 1, (int) temp.getY());
             Point southCoordinates = new Point((int) temp.getX(), (int) temp.getY() - 1);
             Point southWestCoordinates = new Point((int) temp.getX() - 1, (int) temp.getY() - 1);
-            Point northWestCoordinates = new Point((int) temp.getX() - 1, (int) temp.getY() + 1);
+            Point northWestCoordinates = new Point((int) temp.getX() - 1, (int) temp.getY());
 
             Boolean isNorth = hexagonalGridOfSystems.containsKey(northCoordinates);
             Boolean isNorthEast = hexagonalGridOfSystems.containsKey(northEastCoordinates);
@@ -155,13 +156,21 @@ public class Galaxy {
         return galaxy;
     }
 
-    public void propertiesForLegalGalaxy(Galaxy legalGalaxy) {
+    public boolean propertiesForLegalGalaxy(Galaxy legalGalaxy) {
         HashMap<Point, SpaceSystem> legalHexagonalGrid = legalGalaxy.getHexagonalGridOfSystems();
         Set<Point> keyset = legalGalaxy.getHexagonalGridOfSystems().keySet();
-        Set<SpaceSystem> values = new HashSet<>(legalHexagonalGrid.values());
+        HashSet<Planet> noDuplicateSet = new HashSet<>();
+
+        // This insures that no duplicate planets can occur as HashSet can't contain duplicates
+        for(Planet temp : legalGalaxy.listOfPlanetsInGalaxy()) {
+            if(!noDuplicateSet.add(temp)) {
+                throw new CustomException01("hej kat failure");
+            }
+        }
 
         //Every system has at most three planets
         for (Point temp : keyset) {
+            System.out.println(getHexagonalGridOfSystems().get(temp).getHexagonalGrid().size());
             if (legalHexagonalGrid.get(temp).listOfPlanetsInSystem.size() > 3) {
                 try {
                     throw new IndexOutOfBoundsException("Too many planets in system");
@@ -169,25 +178,12 @@ public class Galaxy {
                     e.printStackTrace();
                 }
             }
-            //TODO make sure only one planet in Center system
-            //The center system must have exactly one planet named Mecatol Rex
-            if (!temp.equals(new Point(0, 0)) && legalHexagonalGrid.get(temp).listOfPlanetsInSystem.get(0).planetName.equals("Mecatol Rex")) {
-                try {
-                    throw new Exception("Planet Metacol Rex does not exist in center system (0,0)");
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                for (Planet tempPlanet : legalHexagonalGrid.get(temp).listOfPlanetsInSystem) {
-                    int frequency = Collections.frequency(values, tempPlanet);
-                    if (frequency > 1) {
-                        try {
-                            throw new Exception("Planet" + tempPlanet + "occours in multiple Systems");
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }
 
+            //The center system must have exactly one planet named Mecatol Rex
+            if (legalHexagonalGrid.get(temp).getHexagonalGrid().size() == 6) {
+                if (!((legalHexagonalGrid.get(temp).listOfPlanetsInSystem.size() == 1) && (legalHexagonalGrid.get(temp).listOfPlanetsInSystem.get(0).getPlanetName().equals("Mecatol Rex")))) {
+                    throw new CustomException01("failure");
+                }
             }
 
 
@@ -196,6 +192,37 @@ public class Galaxy {
                 throw new IllegalStateException("Center system does not contain Mecatol Rex planet");
                 */
         }
+        return true;
+    }
+
+    public Galaxy constructRandomGalaxy() {
+        Galaxy randomGalaxy = new Galaxy();
+
+        //Adding Mecatol Rex planet manually to center system
+        SpaceSystem centerSystem = new SpaceSystem();
+        Planet mecatolRex = new Planet("Mecatol Rex", 6);
+        centerSystem.listOfPlanetsInSystem.add(mecatolRex);
+
+        //Generating random systems as neighbours to center system
+        SpaceSystem randomSystem01 = centerSystem.generateRandomSysten();
+        SpaceSystem randomSystem02 = centerSystem.generateRandomSysten();
+        SpaceSystem randomSystem03 = centerSystem.generateRandomSysten();
+        SpaceSystem randomSystem04 = centerSystem.generateRandomSysten();
+        SpaceSystem randomSystem05 = centerSystem.generateRandomSysten();
+        SpaceSystem randomSystem06 = centerSystem.generateRandomSysten();
+
+        //Adding all random generated systems to Galaxy HashMap
+        randomGalaxy.setSystemsIntoGalaxy(new Point(0, 0), centerSystem);
+        randomGalaxy.setSystemsIntoGalaxy(new Point(0, 1), randomSystem01);
+        randomGalaxy.setSystemsIntoGalaxy(new Point(1, 1), randomSystem02);
+        randomGalaxy.setSystemsIntoGalaxy(new Point(1, -1), randomSystem03);
+        randomGalaxy.setSystemsIntoGalaxy(new Point(0, -1), randomSystem04);
+        randomGalaxy.setSystemsIntoGalaxy(new Point(-1, -1), randomSystem05);
+        randomGalaxy.setSystemsIntoGalaxy(new Point(-1, 1), randomSystem06);
+
+        randomGalaxy.createHexagonalGridOfSystems(randomGalaxy.getHexagonalGridOfSystems());
+
+        return randomGalaxy;
     }
 }
 

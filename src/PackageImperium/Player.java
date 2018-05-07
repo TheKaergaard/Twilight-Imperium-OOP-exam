@@ -8,6 +8,7 @@ package PackageImperium;
 import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.Unit;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.io.*;
@@ -15,20 +16,18 @@ import java.util.*;
 import java.util.List;
 
 public class Player extends CustomComparator {
+    private String playerName;
+    private String uniqueRace;
+    private String uniqueColour;
+
+    public Player() {
+    }
 
     public Player(String playerName, String uniqueRace, String uniqueColour) {
         this.playerName = playerName;
         this.uniqueRace = uniqueRace;
         this.uniqueColour = uniqueColour;
     }
-
-    public Player() {
-    }
-
-    private String playerName;
-    private String uniqueRace;
-    private String uniqueColour;
-
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
@@ -95,22 +94,24 @@ public class Player extends CustomComparator {
         return systemsOwnedByPlayer;
     }
 
-    public void createTextFileOfPlayerOwnedPlanets(Galaxy inputGalaxy) {
+    public void createTextFileOfPlayerOwnedPlanets(Galaxy inputGalaxy, String fileName) {
         Player tempPlayer = new Player();
         ArrayList<SpaceSystem> playerOwnedSystems = tempPlayer.listOfSystemsOwnedByOnePlayer(inputGalaxy);
 
-        File textfile = new File("src/PackageImperium/player_owned_systems_in_galaxy.txt");
+        File textfile = new File("src/PackageImperium/"+fileName+".txt");
+        //Try with resources closes the writer automatically
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/player_owned_systems_in_galaxy.txt", true)))) {
             for (SpaceSystem temp : playerOwnedSystems) {
+                out.write(temp.allShipsInSystem().get(0).getOwner().toString() + "\n");
                 for (int i = 0; i < temp.listOfPlanetsInSystem.size(); i++) {
-                    out.write(temp.listOfPlanetsInSystem.get(i).planetName + "\n");
+                    out.write("\t"+temp.listOfPlanetsInSystem.get(i).planetName + "\n");
                 }
             }
-            out.close();
         } catch (IOException e) {
             System.err.println("Could not write to the given .txt file");
         }
     }
+
 
     @Override
     public boolean equals(Object o) {
