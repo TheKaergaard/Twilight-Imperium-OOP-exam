@@ -9,7 +9,7 @@ import PackageImperium.Units.Unit;
 
 import java.util.Comparator;
 
-public class CustomComparator implements Comparator<Unit> {
+public class CustomUnitComparator implements Comparator<Unit> {
 
     @Override
     public int compare(Unit unit1, Unit unit2) {

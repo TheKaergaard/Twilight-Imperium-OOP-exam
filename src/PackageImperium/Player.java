@@ -8,14 +8,13 @@ package PackageImperium;
 import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.Unit;
-import org.junit.jupiter.api.Test;
 
-import java.awt.*;
 import java.io.*;
-import java.util.*;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Objects;
 
-public class Player extends CustomComparator {
+public class Player extends CustomUnitComparator {
     private String playerName;
     private String uniqueRace;
     private String uniqueColour;
@@ -62,7 +61,7 @@ public class Player extends CustomComparator {
                 shipsOwnedByInputPlayer.add(ship);
             }
         }
-        Collections.sort(shipsOwnedByInputPlayer, new CustomComparator());
+        Collections.sort(shipsOwnedByInputPlayer, new CustomUnitComparator());
 
         return shipsOwnedByInputPlayer;
     }

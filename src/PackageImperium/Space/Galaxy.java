@@ -230,7 +230,6 @@ public class Galaxy {
         return randomSystem;
     }
 
-
     public ArrayList<Unit> generateRandomUnits() {
         ArrayList<Unit> listOfRandomUnits = new ArrayList<>();
         Random rnd = new Random();
@@ -273,7 +272,6 @@ public class Galaxy {
         /*
         * Generating the random systems for the galaxy.
         * Every system contains between 0-3 random generated planets.
-        *
         */
 
         SpaceSystem randomSystem01 = generateRandomSystem();

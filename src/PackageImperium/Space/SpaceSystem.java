@@ -6,7 +6,7 @@ package PackageImperium.Space;
  */
 
 import PackageImperium.Player;
-import PackageImperium.Units.*;
+import PackageImperium.Units.Unit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,6 +31,10 @@ public class SpaceSystem {
 
     public HashMap<Position, SpaceSystem> getHexagonalGrid() {
         return hexagonalGrid;
+    }
+
+    public ArrayList<Unit> getListOfShipsInSystem() {
+        return listOfShipsInSystem;
     }
 
     //Looks through all units in system and gets the individually players
@@ -66,7 +70,7 @@ public class SpaceSystem {
         return allShipsInSystem;
     }
 
-    public ArrayList<Unit> allShipsOwnedByOnePlayer(Player inputPlayer) {
+    public ArrayList<Unit> allShipsOwnedByOnePlayerInSystem(Player inputPlayer) {
         ArrayList<Unit> allShipsInSystem = this.allShipsInSystem();
         ArrayList<Unit> shipsOwnedByPlayer = new ArrayList<>();
 
@@ -79,22 +83,34 @@ public class SpaceSystem {
         return shipsOwnedByPlayer;
     }
 
+    //Each players existence is defined by units in a system
     public Player playerWhoWonSpaceBattle() {
-        int hitPlayer1;
-        int hitPlayer2;
+        int hitCountPlayer1 = 0;
+        int hitCountPlayer2 = 0;
         Player winningPlayer = new Player();
         ArrayList<Player> playersInSystemInBattle = this.listOfPlayersInSystem();
 
         if (playersInSystemInBattle.size() != 2) {
             System.out.println("Too many players in systems for space battle");
         } else {
-            hitPlayer1 = hitCount(allShipsOwnedByOnePlayer(playersInSystemInBattle.get(0)));
-            hitPlayer2 = hitCount(allShipsOwnedByOnePlayer(playersInSystemInBattle.get(1)));
+            while (!(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty())) {
+                hitCountPlayer1 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)));
+                hitCountPlayer2 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)));
 
-
+                removeUnitAfterHit(hitCountPlayer2, playersInSystemInBattle.get(0));
+                removeUnitAfterHit(hitCountPlayer1, playersInSystemInBattle.get(1));
+            }
+            //If the outcome of a space battle leaves no ships left in the system, the system will remain neutral
+            if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
+                return new Player("Systems is neutral", "neutral", "neutral");
+            } else if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty()) {
+                winningPlayer = playersInSystemInBattle.get(1);
+                return winningPlayer;
+            } else if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
+                winningPlayer = playersInSystemInBattle.get(0);
+                return winningPlayer;
+            }
         }
-
-
         return winningPlayer;
     }
 
@@ -113,17 +129,16 @@ public class SpaceSystem {
     }
 
     public void removeUnitAfterHit(int detectedHits, Player inputPlayer) {
-        for (int i = 0; i < detectedHits; i++) {
-            if (allShipsOwnedByOnePlayer(inputPlayer).size() >= detectedHits) {
-                if (allShipsOwnedByOnePlayer(inputPlayer).isEmpty()) {
-                    System.out.println(inputPlayer.toString() + " has no ships left to remove!");
+        if (!allShipsOwnedByOnePlayerInSystem(inputPlayer).isEmpty()) {
+            if (allShipsOwnedByOnePlayerInSystem(inputPlayer).size() >= detectedHits) {
+                for (int i = 0; i < detectedHits; i++) {
+                    //removes ship from the back in Array List for each hit
+                    getListOfShipsInSystem().remove(allShipsOwnedByOnePlayerInSystem(inputPlayer).size() - 1);
+
                 }
-                //removes ship from the back in Array List for each hit
-                allShipsInSystem().remove(allShipsOwnedByOnePlayer(inputPlayer).size() - 1);
-                detectedHits--;
-            } else {
-                allShipsInSystem().removeAll();
             }
+        } else {
+            getListOfShipsInSystem().removeAll(allShipsOwnedByOnePlayerInSystem(inputPlayer));
         }
     }
 
