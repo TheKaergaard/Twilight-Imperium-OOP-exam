@@ -85,8 +85,8 @@ public class SpaceSystem {
 
     //Each players existence is defined by units in a system
     public Player playerWhoWonSpaceBattle() {
-        int hitCountPlayer1 = 0;
-        int hitCountPlayer2 = 0;
+        int hitCountPlayer1;
+        int hitCountPlayer2;
         Player winningPlayer = new Player();
         ArrayList<Player> playersInSystemInBattle = this.listOfPlayersInSystem();
 
@@ -96,22 +96,29 @@ public class SpaceSystem {
             while (!(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty())) {
                 hitCountPlayer1 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)));
                 hitCountPlayer2 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)));
-
+                System.out.println("1: " + hitCountPlayer1);
+                System.out.println("2: " + hitCountPlayer2);
                 removeUnitAfterHit(hitCountPlayer2, playersInSystemInBattle.get(0));
                 removeUnitAfterHit(hitCountPlayer1, playersInSystemInBattle.get(1));
+
+                //If the outcome of a space battle leaves no ships left in the system, the system will remain neutral
+                if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
+                    winningPlayer = playersInSystemInBattle.get(0);
+                    return winningPlayer;
+                }
+                if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty()) {
+                    winningPlayer = playersInSystemInBattle.get(1);
+                    return winningPlayer;
+                }
+                /*
+                if ((allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty())) {
+                    return new Player("Systems is neutral", "neutral", "neutral");
+                }
+                */
             }
-            //If the outcome of a space battle leaves no ships left in the system, the system will remain neutral
-            if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
-                return new Player("Systems is neutral", "neutral", "neutral");
-            } else if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty()) {
-                winningPlayer = playersInSystemInBattle.get(1);
-                return winningPlayer;
-            } else if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
-                winningPlayer = playersInSystemInBattle.get(0);
-                return winningPlayer;
-            }
+
         }
-        return winningPlayer;
+        return new Player("Failure", "Failure", "Failure");
     }
 
     //Decides if a player gets a hit when rolling 10-sided dice. Looks at the given units combat value

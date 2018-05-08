@@ -19,7 +19,6 @@ import java.util.HashMap;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GalaxyTest {
@@ -92,7 +91,7 @@ class GalaxyTest {
         SpaceSystem system02 = new SpaceSystem();
 
         testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), system01);
-        testGalaxy.setSystemsIntoGalaxy(new Point(1, -1), system02);
+        testGalaxy.setSystemsIntoGalaxy(new Point(1, 0), system02);
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
 
         assertEquals(system01, system02.getHexagonalGrid().get(SpaceSystem.Position.NORTH_WEST));

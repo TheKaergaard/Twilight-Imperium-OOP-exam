@@ -91,7 +91,9 @@ class SpaceSystemTest {
         testSystem01.addEnteredShip(d2);
         testSystem01.addEnteredShip(c2);
 
-        ArrayList<Unit> test = testSystem01.allShipsOwnedByOnePlayerInSystem(p1);
-
+        System.out.println(testSystem01.playerWhoWonSpaceBattle().toString());
+        System.out.println(testSystem01.allShipsOwnedByOnePlayerInSystem(p1).size());
+        System.out.println(testSystem01.allShipsOwnedByOnePlayerInSystem(p2).size());
     }
+
 }
