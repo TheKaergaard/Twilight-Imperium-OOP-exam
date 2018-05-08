@@ -1,4 +1,4 @@
-package PackageImperium;
+package PackageImperium.CustomComparators;
 /*
  * OOP exam 2018
  * Simon Park Kærgaard

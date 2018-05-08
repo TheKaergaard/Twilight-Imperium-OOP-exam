@@ -5,13 +5,13 @@ package PackageImperium;
  * skarga17@student.aau.dk
  */
 
+import PackageImperium.CustomComparators.CustomUnitComparator;
 import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.Unit;
 
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Objects;
 
 public class Player extends CustomUnitComparator {
@@ -61,7 +61,7 @@ public class Player extends CustomUnitComparator {
                 shipsOwnedByInputPlayer.add(ship);
             }
         }
-        Collections.sort(shipsOwnedByInputPlayer, new CustomUnitComparator());
+        shipsOwnedByInputPlayer.sort(new CustomUnitComparator());
 
         return shipsOwnedByInputPlayer;
     }
@@ -74,7 +74,7 @@ public class Player extends CustomUnitComparator {
         //Goes through all systems in the input galaxy and then the units in each system.
         for (SpaceSystem temp : allSystemsInGalaxy) {
             Player onlyPlayerInSystem = null;
-            for (Unit unit : temp.allShipsInSystem()) {
+            for (Unit unit : temp.getListOfShipsInSystem()) {
                 //firstPlayer is only null once. Then it will be written over by the found player
                 if (onlyPlayerInSystem == null) {
                     onlyPlayerInSystem = unit.getOwner();
@@ -101,7 +101,7 @@ public class Player extends CustomUnitComparator {
         //Try with resources closes the writer automatically
         try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/"+fileName+".txt", true)))) {
             for (SpaceSystem temp : playerOwnedSystems) {
-                out.write(temp.allShipsInSystem().get(0).getOwner().toString() + "\n");
+                out.write(temp.getListOfShipsInSystem().get(0).getOwner().toString() + "\n");
                 for (int i = 0; i < temp.listOfPlanetsInSystem.size(); i++) {
                     out.write("\t"+temp.listOfPlanetsInSystem.get(i).planetName + "\n");
                 }

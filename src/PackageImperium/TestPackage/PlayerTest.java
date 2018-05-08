@@ -1,4 +1,4 @@
-package TestPackage;
+package PackageImperium.TestPackage;
 /*
  * OOP exam 2018
  * Simon Park Kærgaard
@@ -11,13 +11,11 @@ import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.*;
 import org.junit.Ignore;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.*;
 
 import java.awt.*;
 import java.io.*;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
@@ -29,7 +27,6 @@ class PlayerTest {
 
     @Test
     void sortedListOfShipsFromPlayer() {
-
         Player p1 = new Player("p1", "race1", "colour");
         Galaxy testGalaxy = new Galaxy();
         SpaceSystem testSystem = new SpaceSystem();
@@ -67,19 +64,19 @@ class PlayerTest {
         Dreadnought d1 = new Dreadnought(p1);
         Dreadnought d2 = new Dreadnought(p2);
 
-        system01.addEnteredShip(d1);
+        system01.addShipToSystem(d1);
 
-        system02.addEnteredShip(d1);
-        system02.addEnteredShip(d2);
+        system02.addShipToSystem(d1);
+        system02.addShipToSystem(d2);
 
-        system03.addEnteredShip(d1);
-        system03.addEnteredShip(d2);
-        system03.addEnteredShip(d1);
+        system03.addShipToSystem(d1);
+        system03.addShipToSystem(d2);
+        system03.addShipToSystem(d1);
 
-        system04.addEnteredShip(d1);
-        system04.addEnteredShip(d1);
+        system04.addShipToSystem(d1);
+        system04.addShipToSystem(d1);
 
-        system05.addEnteredShip(d2);
+        system05.addShipToSystem(d2);
 
         testGalaxy.setSystemsIntoGalaxy(new Point(0, 1), system01);
         testGalaxy.setSystemsIntoGalaxy(new Point(1, 0), system02);
@@ -124,16 +121,16 @@ class PlayerTest {
         Dreadnought d1 = new Dreadnought(testPlayer01);
         Dreadnought d2 = new Dreadnought(testPlayer02);
 
-        system01.addEnteredShip(d1);
+        system01.addShipToSystem(d1);
 
-        system02.addEnteredShip(d1);
-        system02.addEnteredShip(d2);
+        system02.addShipToSystem(d1);
+        system02.addShipToSystem(d2);
 
-        system03.addEnteredShip(d1);
-        system03.addEnteredShip(d2);
-        system03.addEnteredShip(d1);
+        system03.addShipToSystem(d1);
+        system03.addShipToSystem(d2);
+        system03.addShipToSystem(d1);
 
-        system04.addEnteredShip(d2);
+        system04.addShipToSystem(d2);
 
         temp.setSystemsIntoGalaxy(new Point(0, 1), system01);
         temp.setSystemsIntoGalaxy(new Point(1, 0), system02);

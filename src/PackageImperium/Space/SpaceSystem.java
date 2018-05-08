@@ -5,6 +5,8 @@ package PackageImperium.Space;
  * skarga17@student.aau.dk
  */
 
+import PackageImperium.CustomComparators.CustomUnitResourceCostComparator;
+import PackageImperium.CustomExceptions.UnitDoesNotExcistException;
 import PackageImperium.Player;
 import PackageImperium.Units.Unit;
 
@@ -38,9 +40,10 @@ public class SpaceSystem {
     }
 
     //Looks through all units in system and gets the individually players
+    //A players presence in a system is defined by the units
     public ArrayList<Player> listOfPlayersInSystem() {
         ArrayList<Player> playersInSystem = new ArrayList<>();
-        for (Unit unit : allShipsInSystem()) {
+        for (Unit unit : this.listOfShipsInSystem) {
             if (!playersInSystem.contains(unit.getOwner())) {
                 playersInSystem.add(unit.getOwner());
             }
@@ -48,30 +51,25 @@ public class SpaceSystem {
         return playersInSystem;
     }
 
-    public void addEnteredShip(Unit shipToAdd) {
+    public void addShipToSystem(Unit shipToAdd) {
         listOfShipsInSystem.add(shipToAdd);
-        System.out.println(shipToAdd.toString() + "added to system");
     }
 
-    public void removeLeavedShip(Unit shipToRemove) {
+    public void removeShipFromSystem(Unit shipToRemove) {
         boolean check = listOfShipsInSystem.contains(shipToRemove);
         if (check) {
             listOfShipsInSystem.remove(shipToRemove);
         } else {
-            System.out.println(shipToRemove + "does not exist in system");
+            try {
+                throw new UnitDoesNotExcistException(shipToRemove + "does not exist in system");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
-    //Returning all ships in the system as ArrayList
-    public ArrayList<Unit> allShipsInSystem() {
-        ArrayList<Unit> allShipsInSystem = new ArrayList<>();
-        allShipsInSystem.addAll(listOfShipsInSystem);
-
-        return allShipsInSystem;
-    }
-
     public ArrayList<Unit> allShipsOwnedByOnePlayerInSystem(Player inputPlayer) {
-        ArrayList<Unit> allShipsInSystem = this.allShipsInSystem();
+        ArrayList<Unit> allShipsInSystem = getListOfShipsInSystem();
         ArrayList<Unit> shipsOwnedByPlayer = new ArrayList<>();
 
         for (Unit ship : allShipsInSystem) {
@@ -79,7 +77,7 @@ public class SpaceSystem {
                 shipsOwnedByPlayer.add(ship);
             }
         }
-        //TODO Sort before output
+        shipsOwnedByPlayer.sort(new CustomUnitResourceCostComparator());
         return shipsOwnedByPlayer;
     }
 
@@ -94,10 +92,13 @@ public class SpaceSystem {
             System.out.println("Too many players in systems for space battle");
         } else {
             while (!(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty())) {
+
                 hitCountPlayer1 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)));
                 hitCountPlayer2 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)));
+
                 System.out.println("1: " + hitCountPlayer1);
                 System.out.println("2: " + hitCountPlayer2);
+
                 removeUnitAfterHit(hitCountPlayer2, playersInSystemInBattle.get(0));
                 removeUnitAfterHit(hitCountPlayer1, playersInSystemInBattle.get(1));
 

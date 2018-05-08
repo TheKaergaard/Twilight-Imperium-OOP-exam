@@ -46,5 +46,4 @@ public class Carrier implements Unit {
     public Player getOwner() {
         return owner;
     }
-
 }

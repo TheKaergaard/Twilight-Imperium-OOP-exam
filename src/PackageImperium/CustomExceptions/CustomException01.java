@@ -1,4 +1,4 @@
-package PackageImperium;
+package PackageImperium.CustomExceptions;
 /*
  * OOP exam 2018
  * Simon Park Kærgaard

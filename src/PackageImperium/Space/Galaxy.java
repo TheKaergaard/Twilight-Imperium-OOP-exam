@@ -5,7 +5,7 @@ package PackageImperium.Space;
  * skarga17@student.aau.dk
  */
 
-import PackageImperium.CustomException01;
+import PackageImperium.CustomExceptions.CustomException01;
 import PackageImperium.Player;
 import PackageImperium.Units.*;
 
@@ -13,7 +13,7 @@ import java.awt.*;
 import java.util.*;
 
 public class Galaxy {
-    HashMap<Point, SpaceSystem> hexagonalGridOfSystems = new HashMap<>();
+    private HashMap<Point, SpaceSystem> hexagonalGridOfSystems = new HashMap<>();
 
     public Galaxy() {
     }
@@ -31,7 +31,7 @@ public class Galaxy {
         ArrayList<SpaceSystem> systems = listOfSystemsInGalaxy();
         ArrayList<Unit> units = new ArrayList<>();
         for (SpaceSystem temp : systems) {
-            units.addAll(temp.allShipsInSystem());
+            units.addAll(temp.getListOfShipsInSystem());
         }
         return units;
     }
@@ -51,6 +51,7 @@ public class Galaxy {
         allSystemsInGalaxy.addAll(this.hexagonalGridOfSystems.values());
         return allSystemsInGalaxy;
     }
+
     /*
      * This method takes in the HashMap of a created Galaxy and puts the contained systems into a hexagonal grid
      * with a center system surrounded by 6 other systems.
@@ -173,7 +174,7 @@ public class Galaxy {
             }
             //Checks if the center system has 6 neighbor systems and therefore is a galaxy
             if (legalHexagonalGrid.get(temp).getHexagonalGrid().size() == 6) {
-            //Checks if the center system only contains exactly one planet named Mecatol Rex
+                //Checks if the center system only contains exactly one planet named Mecatol Rex
                 if (!((legalHexagonalGrid.get(temp).listOfPlanetsInSystem.size() == 1) && (legalHexagonalGrid.get(temp).listOfPlanetsInSystem.get(0).getPlanetName().equals("Mecatol Rex")))) {
                     try {
                         throw new CustomException01("Center system contains other planets than Mecatol Rex");
@@ -184,8 +185,8 @@ public class Galaxy {
             }
         }
         //Insures that no duplicate planets can occur as HashSet can't contain duplicates
-        for(Planet temp : this.listOfPlanetsInGalaxy()) {
-            if(!noDuplicateSet.add(temp)) {
+        for (Planet temp : this.listOfPlanetsInGalaxy()) {
+            if (!noDuplicateSet.add(temp)) {
                 try {
                     throw new CustomException01("Planet " + temp.getPlanetName() + " occurs multiple times");
                 } catch (Exception e) {
@@ -213,7 +214,7 @@ public class Galaxy {
     public ArrayList<Planet> generateRandomPlanets() {
         ArrayList<Planet> listOfRandomPlanets = new ArrayList<>();
         Random rnd = new Random();
-        int amountOfPlanets = rnd.nextInt(3) + 1;
+        int amountOfPlanets = rnd.nextInt(2) + 1;
 
         //Generates 1-3 random planets. Every planet has a random resource production between 0 and 6.
         for (int i = 0; i < amountOfPlanets; i++) {
@@ -270,9 +271,9 @@ public class Galaxy {
         centerSystem.listOfPlanetsInSystem.add(mecatolRex);
 
         /*
-        * Generating the random systems for the galaxy.
-        * Every system contains between 0-3 random generated planets.
-        */
+         * Generating the random systems for the galaxy.
+         * Every system contains between 0-3 random generated planets.
+         */
 
         SpaceSystem randomSystem01 = generateRandomSystem();
         SpaceSystem randomSystem02 = generateRandomSystem();
@@ -292,8 +293,8 @@ public class Galaxy {
 
         randomGalaxy.createHexagonalGridOfSystems(randomGalaxy.getHexagonalGridOfSystems());
 
-        for(SpaceSystem temp : randomGalaxy.listOfSystemsInGalaxy()) {
-            temp.allShipsInSystem().addAll(generateRandomUnits());
+        for (SpaceSystem temp : randomGalaxy.listOfSystemsInGalaxy()) {
+            temp.getListOfShipsInSystem().addAll(generateRandomUnits());
         }
 
         return randomGalaxy;

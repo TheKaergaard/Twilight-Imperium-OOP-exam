@@ -1,4 +1,4 @@
-package PackageImperium;
+package PackageImperium.CustomComparators;
 /*
  * OOP exam 2018
  * Simon Park Kærgaard
@@ -10,6 +10,7 @@ import PackageImperium.Units.Unit;
 import java.util.Comparator;
 
 public class CustomUnitResourceCostComparator implements Comparator<Unit> {
+
     @Override
     public int compare(Unit unit1, Unit unit2) {
         //Sorts from highest to lowest
