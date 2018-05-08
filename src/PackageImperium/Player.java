@@ -100,7 +100,7 @@ public class Player extends CustomComparator {
 
         File textfile = new File("src/PackageImperium/"+fileName+".txt");
         //Try with resources closes the writer automatically
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/player_owned_systems_in_galaxy.txt", true)))) {
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/"+fileName+".txt", true)))) {
             for (SpaceSystem temp : playerOwnedSystems) {
                 out.write(temp.allShipsInSystem().get(0).getOwner().toString() + "\n");
                 for (int i = 0; i < temp.listOfPlanetsInSystem.size(); i++) {
@@ -111,7 +111,6 @@ public class Player extends CustomComparator {
             System.err.println("Could not write to the given .txt file");
         }
     }
-
 
     @Override
     public boolean equals(Object o) {

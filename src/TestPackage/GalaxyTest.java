@@ -53,29 +53,28 @@ class GalaxyTest {
 
         testGalaxy.setSystemsIntoGalaxy(new Point(0,0), testSystem01);
         testGalaxy.setSystemsIntoGalaxy(new Point(0,1), testSystem02);
-        //testing for size of the returned array
-        assertEquals(2, testGalaxy.listOfSystemsInGalaxy().size());
 
+        //testing for size and systems in the returned ArrayList
+        assertEquals(2, testGalaxy.listOfSystemsInGalaxy().size());
         assertEquals(testSystem01,testGalaxy.listOfSystemsInGalaxy().get(0));
         assertEquals(testSystem02,testGalaxy.listOfSystemsInGalaxy().get(1));
     }
 
     @Test
-    void positionOfSystemsNorthSouth() {
-
+    void positionOfSystemsNorthAndSouth() {
         SpaceSystem system01 = new SpaceSystem();
         SpaceSystem system02 = new SpaceSystem();
 
         testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), system01);
         testGalaxy.setSystemsIntoGalaxy(new Point(0, -1), system02);
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
-        //
+
         assertEquals(system01, system02.getHexagonalGrid().get(SpaceSystem.Position.NORTH));
         assertEquals(system02, system01.getHexagonalGrid().get(SpaceSystem.Position.SOUTH));
     }
 
     @Test
-    void positionOfSystemsNESW() {
+    void positionOfSystemsNorthEastAndSouthWest() {
         SpaceSystem system01 = new SpaceSystem();
         SpaceSystem system02 = new SpaceSystem();
 
@@ -88,7 +87,7 @@ class GalaxyTest {
     }
 
     @Test
-    void positionOfSystemsNWSE() {
+    void positionOfSystemsNorthWestAndSouthEast() {
         SpaceSystem system01 = new SpaceSystem();
         SpaceSystem system02 = new SpaceSystem();
 
@@ -102,10 +101,23 @@ class GalaxyTest {
 
     @Test
     void creationOfGalaxyWithPlayers() {
-        Galaxy testGalaxyWithPlayers = testGalaxy.createGalaxyWithPlayers();
+        Galaxy testGalaxyWithPlayers = testGalaxy.creationOfGalaxyWithPredefinedConfiguration();
         HashMap<Point, SpaceSystem> systemsInTestGalaxy = testGalaxyWithPlayers.getHexagonalGridOfSystems();
-
         Set<Point> keyset = systemsInTestGalaxy.keySet();
+
+        boolean centerSystemContainsOnlyMecatolRex = true;
+
+        for(Point temp : keyset) {
+            if(systemsInTestGalaxy.get(temp).hexagonalGrid.containsKey(SpaceSystem.Position.NORTH_EAST)) {
+                System.out.println("hej");
+
+            }
+            if (!((systemsInTestGalaxy.get(temp).listOfPlanetsInSystem.size() == 1) && (systemsInTestGalaxy.get(temp).listOfPlanetsInSystem.get(0).getPlanetName().equals("Mecatol Rex")))) {
+                centerSystemContainsOnlyMecatolRex = false;
+            }
+        }
+
+        //assertTrue(centerSystemContainsOnlyMecatolRex);
 
         SpaceSystem lol = new SpaceSystem();
         if (keyset.contains(lol.getHexagonalGrid().get(SpaceSystem.Position.NORTH))) {
@@ -119,7 +131,7 @@ class GalaxyTest {
 
     @Test
     void shipsOwnedByPlayers() {
-        Galaxy testGalaxyWithPlayers = testGalaxy.createGalaxyWithPlayers();
+        Galaxy testGalaxyWithPlayers = testGalaxy.creationOfGalaxyWithPredefinedConfiguration();
         HashMap<Point, SpaceSystem> systemsInTestGalaxy = testGalaxyWithPlayers.getHexagonalGridOfSystems();
 
         for (Point temp : systemsInTestGalaxy.keySet()) {
@@ -128,12 +140,12 @@ class GalaxyTest {
 
             //System.out.println(testGalaxyWithPlayers.createGalaxyWithPlayers().getHexagonalGridOfSystems().size());
             //System.out.println(systemsInTestGalaxy.get(temp).allShipsInSystem().get(i).getUnitType());
-
         }
     }
+
     @Test
-    void legalGalaxy01() {
-        SpaceSystem testSystem01 = new SpaceSystem();
+    void testingPropertiesForLegalGalaxy() {
+        SpaceSystem centerSystem = new SpaceSystem();
         SpaceSystem testSystem02 = new SpaceSystem();
         SpaceSystem testSystem03 = new SpaceSystem();
         SpaceSystem testSystem04 = new SpaceSystem();
@@ -141,23 +153,20 @@ class GalaxyTest {
         SpaceSystem testSystem06 = new SpaceSystem();
         SpaceSystem testSystem07 = new SpaceSystem();
 
+        Planet mecatolRex = new Planet("Mecatol Rex");
         Planet planet01 = new Planet("planet01",1);
         Planet planet02 = new Planet("planet02",1);
         Planet planet03 = new Planet("planet03",1);
         Planet planet04 = new Planet("planet04",1);
-        Planet mecatolRex = new Planet("Mecatol Rex");
 
-        //testSystem01.listOfPlanetsInSystem.add(planet01);
+        centerSystem.listOfPlanetsInSystem.add(mecatolRex);
+        //centerSystem.listOfPlanetsInSystem.add(planet01);
         testSystem02.listOfPlanetsInSystem.add(planet02);
         testSystem02.listOfPlanetsInSystem.add(planet03);
-        testSystem03.listOfPlanetsInSystem.add(planet03);
-        //testSystem02.listOfPlanetsInSystem.add(planet01);
+        testSystem03.listOfPlanetsInSystem.add(planet04);
+        //testSystem03.listOfPlanetsInSystem.add(planet04);
 
-        //testSystem.listOfPlanetsInSystem.add(planet02);
-        testSystem01.listOfPlanetsInSystem.add(mecatolRex);
-        //testSystem.listOfPlanetsInSystem.add(planet04);
-
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem01);
+        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), centerSystem);
         testGalaxy.setSystemsIntoGalaxy(new Point(0,1), testSystem02);
         testGalaxy.setSystemsIntoGalaxy(new Point(1,1), testSystem03);
         testGalaxy.setSystemsIntoGalaxy(new Point(1,0), testSystem04);
@@ -167,40 +176,29 @@ class GalaxyTest {
 
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
 
-        assertTrue(testGalaxy.propertiesForLegalGalaxy(testGalaxy));
+        assertTrue(testGalaxy.checkForPropertiesOfLegalGalaxy());
     }
 
     @Test
-    void randomGalaxy01() {
+    void testingIfRandomGeneratedGalaxyIsLegal() {
         Galaxy randomTestGalaxy = new Galaxy();
         SpaceSystem foo = new SpaceSystem();
-        Player temp = foo.createRandomPlayer();
+
+        Player temp = randomTestGalaxy.generateRandomPlayer();
         randomTestGalaxy = randomTestGalaxy.constructRandomGalaxy();
-        ArrayList<Unit> foo2 = foo.generateRandomUnits();
-        ArrayList<Planet> foo3 = foo.generateRandomPlanets();
+        ArrayList<Unit> foo2 = randomTestGalaxy.generateRandomUnits();
+        ArrayList<Planet> foo3 = randomTestGalaxy.generateRandomPlanets();
 
         assertEquals(7,randomTestGalaxy.getHexagonalGridOfSystems().size());
         assertTrue(!randomTestGalaxy.listOfSystemsInGalaxy().isEmpty());
         assertTrue(!randomTestGalaxy.listOfPlanetsInGalaxy().isEmpty());
 
-        /*
-        System.out.println(temp.toString());
-        for (Unit aFoo2 : foo2) {
-            System.out.println(aFoo2.getUnitType());
-        }
-        for (Planet aFoo3 : foo3) {
-            System.out.println(aFoo3.planetName);
-            System.out.println(aFoo3.getResourceProduction());
-        }
-        */
-        //System.out.println(randomTestGalaxy.listOfShipsInGalaxy().size() + "ships in galaxy");
-        //System.out.println(randomTestGalaxy.listOfSystemsInGalaxy().size() + "systems in galaxy");
-       //randomTestGalaxy.propertiesForLegalGalaxy(randomTestGalaxy);
+        assertTrue(randomTestGalaxy.checkForPropertiesOfLegalGalaxy());
     }
 
     @Ignore
     void sizeOfCreatedGalaxyWithPlayers() {
-        Galaxy testGalaxy02 = testGalaxy.createGalaxyWithPlayers();
+        Galaxy testGalaxy02 = testGalaxy.creationOfGalaxyWithPredefinedConfiguration();
 
         assertEquals(7, testGalaxy02.getHexagonalGridOfSystems().size());
     }

@@ -10,7 +10,6 @@ import PackageImperium.Units.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 import java.util.Random;
 
 public class SpaceSystem {
@@ -26,28 +25,8 @@ public class SpaceSystem {
     public SpaceSystem() {
     }
 
-    public SpaceSystem(Position tempPos, SpaceSystem tempSystem) {
-        this.hexagonalGrid.put(tempPos, tempSystem);
-    }
-
-    public void setListOfPlanetsInSystem(ArrayList<Planet> listOfPlanetsInSystem) {
-        if (listOfPlanetsInSystem.size() < 3) {
-            throw new IndexOutOfBoundsException();
-        } else {
-            this.listOfPlanetsInSystem = listOfPlanetsInSystem;
-        }
-    }
-
-    public void setPosition(Position position) {
-        this.position = position;
-    }
-
     public void setHexagonalGrid(Position tempPos, SpaceSystem tempSystem) {
         this.hexagonalGrid.put(tempPos, tempSystem);
-    }
-
-    public Position getPosition() {
-        return position;
     }
 
     public HashMap<Position, SpaceSystem> getHexagonalGrid() {
@@ -67,7 +46,7 @@ public class SpaceSystem {
 
     public void addEnteredShip(Unit shipToAdd) {
         listOfShipsInSystem.add(shipToAdd);
-        System.out.println(shipToAdd + "added to system");
+        System.out.println(shipToAdd.toString() + "added to system");
     }
 
     public void removeLeavedShip(Unit shipToRemove) {
@@ -87,68 +66,74 @@ public class SpaceSystem {
         return allShipsInSystem;
     }
 
-    public Player createRandomPlayer() {
-        Player randomPlayer = new Player();
-        Random rnd = new Random();
-        int amountOfPlayers = rnd.nextInt(4) + 2;
-        //Creates a random player between 2-6
-        for (int i = 0; i < amountOfPlayers; i++) {
-            randomPlayer.setPlayerName("Player" + i);
-            randomPlayer.setUniqueRace("Race" + i);
-            randomPlayer.setUniqueColour("Colour" + i);
-        }
-        return randomPlayer;
-    }
+    public ArrayList<Unit> allShipsOwnedByOnePlayer(Player inputPlayer) {
+        ArrayList<Unit> allShipsInSystem = this.allShipsInSystem();
+        ArrayList<Unit> shipsOwnedByPlayer = new ArrayList<>();
 
-    public ArrayList<Unit> generateRandomUnits() {
-        ArrayList<Unit> listOfRandomUnits = new ArrayList<>();
-        Random rnd = new Random();
-        //+1 secures at least one unit per player
-        int amountOfUnits = rnd.nextInt(5)+1;
-
-        for (int i = 0; i < amountOfUnits; i++) {
-            int unitToCreate = rnd.nextInt(4);
-            switch (unitToCreate) {
-                case 0:
-                    Destroyer destroyer = new Destroyer(createRandomPlayer());
-                    listOfRandomUnits.add(destroyer);
-                    break;
-                case 1:
-                    Cruiser cruiser = new Cruiser(createRandomPlayer());
-                    listOfRandomUnits.add(cruiser);
-                    break;
-                case 2:
-                    Carrier carrier = new Carrier(createRandomPlayer());
-                    listOfRandomUnits.add(carrier);
-                    break;
-                case 3:
-                    Dreadnought dreadnought = new Dreadnought(createRandomPlayer());
-                    listOfRandomUnits.add(dreadnought);
-                    break;
+        for (Unit ship : allShipsInSystem) {
+            if (ship.getOwner().equals(inputPlayer)) {
+                shipsOwnedByPlayer.add(ship);
             }
         }
-        return listOfRandomUnits;
+        //TODO Sort before output
+        return shipsOwnedByPlayer;
     }
 
-    public ArrayList<Planet> generateRandomPlanets() {
-        ArrayList<Planet> listOfRandomPlanets = new ArrayList<>();
-        Random rnd = new Random();
-        int amountOfPlanets = rnd.nextInt(3)+1;
+    public Player playerWhoWonSpaceBattle() {
+        int hitPlayer1;
+        int hitPlayer2;
+        Player winningPlayer = new Player();
+        ArrayList<Player> playersInSystemInBattle = this.listOfPlayersInSystem();
+
+        if (playersInSystemInBattle.size() != 2) {
+            System.out.println("Too many players in systems for space battle");
+        } else {
+            hitPlayer1 = hitCount(allShipsOwnedByOnePlayer(playersInSystemInBattle.get(0)));
+            hitPlayer2 = hitCount(allShipsOwnedByOnePlayer(playersInSystemInBattle.get(1)));
 
 
-        for (int i = 0; i < amountOfPlanets; i++) {
-            int resourceProduction = rnd.nextInt(6);
-            Planet temp = new Planet("Planet" + i, resourceProduction);
-            listOfRandomPlanets.add(temp);
         }
-        return listOfRandomPlanets;
+
+
+        return winningPlayer;
     }
 
-    public SpaceSystem generateRandomSysten() {
-        SpaceSystem randomSystem = new SpaceSystem();
-        randomSystem.allShipsInSystem().addAll(generateRandomUnits());
-        randomSystem.listOfPlanetsInSystem.addAll(generateRandomPlanets());
-        return randomSystem;
+    //Decides if a player gets a hit when rolling 10-sided dice. Looks at the given units combat value
+    public int hitCount(ArrayList<Unit> unitsOwnedByPlayer) {
+        Random rnd = new Random();
+        int diceRoll = rnd.nextInt(9) + 1;
+        int hit = 0;
+
+        for (Unit unit : unitsOwnedByPlayer) {
+            if (diceRoll >= unit.getCombatValue()) {
+                hit++;
+            }
+        }
+        return hit;
     }
 
+    public void removeUnitAfterHit(int detectedHits, Player inputPlayer) {
+        for (int i = 0; i < detectedHits; i++) {
+            if (allShipsOwnedByOnePlayer(inputPlayer).size() >= detectedHits) {
+                if (allShipsOwnedByOnePlayer(inputPlayer).isEmpty()) {
+                    System.out.println(inputPlayer.toString() + " has no ships left to remove!");
+                }
+                //removes ship from the back in Array List for each hit
+                allShipsInSystem().remove(allShipsOwnedByOnePlayer(inputPlayer).size() - 1);
+                detectedHits--;
+            } else {
+                allShipsInSystem().removeAll();
+            }
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "SpaceSystem{" +
+                "position=" + position +
+                ", listOfPlanetsInSystem=" + listOfPlanetsInSystem +
+                ", listOfShipsInSystem=" + listOfShipsInSystem +
+                ", hexagonalGrid=" + hexagonalGrid +
+                '}';
+    }
 }
