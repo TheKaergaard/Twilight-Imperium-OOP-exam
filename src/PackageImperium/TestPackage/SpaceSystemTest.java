@@ -5,12 +5,10 @@ package PackageImperium.TestPackage;
  * skarga17@student.aau.dk
  */
 
+import PackageImperium.CustomComparators.CustomUnitResourceCostComparator;
 import PackageImperium.Player;
 import PackageImperium.Space.SpaceSystem;
-import PackageImperium.Units.Carrier;
-import PackageImperium.Units.Cruiser;
-import PackageImperium.Units.Dreadnought;
-import PackageImperium.Units.Unit;
+import PackageImperium.Units.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -81,6 +79,27 @@ class SpaceSystemTest {
     }
 
     @Test
+    void whenSortingUnitsAfterResourceCost() {
+        Destroyer des = new Destroyer();
+        Cruiser cru = new Cruiser();
+        Carrier car = new Carrier();
+        Dreadnought dre = new Dreadnought();
+        //Units added in reverse order
+        testSystem.addShipToSystem(des);
+        testSystem.addShipToSystem(cru);
+        testSystem.addShipToSystem(car);
+        testSystem.addShipToSystem(dre);
+
+        ArrayList<Unit> listToBeSorted = testSystem.listOfShipsInSystem;
+        listToBeSorted.sort(new CustomUnitResourceCostComparator());
+        //Should be: dre, car, cru, des
+        assertEquals(dre,listToBeSorted.get(0));
+        assertEquals(car,listToBeSorted.get(1));
+        assertEquals(cru,listToBeSorted.get(2));
+        assertEquals(des,listToBeSorted.get(3));
+    }
+
+    @Test
     void whenGivingAHitValueItShouldRemoveThatManyUnits() {
         testSystem.addShipToSystem(d1);
         testSystem.addShipToSystem(c1);
@@ -96,15 +115,12 @@ class SpaceSystemTest {
     }
 
     @Test
-    void whenCreatingASpaceBattleFindTheWinningPlayer02() {
+    void whenCreatingASpaceBattleFindTheWinningPlayer() {
         testSystem.addShipToSystem(d1);
         testSystem.addShipToSystem(c1);
         testSystem.addShipToSystem(d2);
         testSystem.addShipToSystem(c2);
 
-        System.out.println(testSystem.playerWhoWonSpaceBattle().toString());
-
-        System.out.println(testSystem.allShipsOwnedByOnePlayerInSystem(p1).size());
-        System.out.println(testSystem.allShipsOwnedByOnePlayerInSystem(p2).size());
+        System.out.println("The winning player of the space battle is:\n\t"+testSystem.playerWhoWonSpaceBattle().toString());
     }
 }

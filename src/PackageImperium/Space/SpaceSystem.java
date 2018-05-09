@@ -6,7 +6,8 @@ package PackageImperium.Space;
  */
 
 import PackageImperium.CustomComparators.CustomUnitResourceCostComparator;
-import PackageImperium.CustomExceptions.UnitDoesNotExcistException;
+import PackageImperium.CustomExceptions.InvalidAmountOfPlayersException;
+import PackageImperium.CustomExceptions.UnitDoesNotExistException;
 import PackageImperium.Player;
 import PackageImperium.Units.Unit;
 
@@ -61,7 +62,7 @@ public class SpaceSystem {
             listOfShipsInSystem.remove(shipToRemove);
         } else {
             try {
-                throw new UnitDoesNotExcistException(shipToRemove + "does not exist in system");
+                throw new UnitDoesNotExistException(shipToRemove);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -89,20 +90,33 @@ public class SpaceSystem {
         ArrayList<Player> playersInSystemInBattle = this.listOfPlayersInSystem();
 
         if (playersInSystemInBattle.size() != 2) {
-            System.out.println("Too many players in systems for space battle");
+            throw new InvalidAmountOfPlayersException("System does not only contain 2 players. Space battle can't happen.");
         } else {
             while (!(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty())) {
-
                 hitCountPlayer1 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)));
                 hitCountPlayer2 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)));
 
-                System.out.println("1: " + hitCountPlayer1);
-                System.out.println("2: " + hitCountPlayer2);
+                System.out.println("System contains " + getListOfShipsInSystem().size() + " units");
 
-                removeUnitAfterHit(hitCountPlayer2, playersInSystemInBattle.get(0));
+                System.out.println("Player 1 has " + allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).size() + " units");
+                System.out.println("Player 2 has " + allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).size() + " units");
+
+                System.out.println("Player 1 hits: " + hitCountPlayer1);
+                System.out.println("Player 2 hits: " + hitCountPlayer2);
+
                 removeUnitAfterHit(hitCountPlayer1, playersInSystemInBattle.get(1));
+                removeUnitAfterHit(hitCountPlayer2, playersInSystemInBattle.get(0));
+
+                System.out.println("Player 1 now has " + allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).size() + " units");
+                System.out.println("Player 2 now has " + allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).size() + " units");
+
+                System.out.println("System contains now " + getListOfShipsInSystem().size() + " units");
+                System.out.println("------------------------------");
 
                 //If the outcome of a space battle leaves no ships left in the system, the system will remain neutral
+                if ((allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty())) {
+                    return new Player("Both players units got eliminated", "System is therefore neutral", " ");
+                }
                 if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
                     winningPlayer = playersInSystemInBattle.get(0);
                     return winningPlayer;
@@ -111,23 +125,18 @@ public class SpaceSystem {
                     winningPlayer = playersInSystemInBattle.get(1);
                     return winningPlayer;
                 }
-                /*
-                if ((allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty())) {
-                    return new Player("Systems is neutral", "neutral", "neutral");
-                }
-                */
-            }
 
+            }
         }
         return new Player("Failure", "Failure", "Failure");
     }
 
-    //Decides if a player gets a hit when rolling 10-sided dice. Looks at the given units combat value
+    //Decides if a player gets a hit when rolling 10-sided dice
     public int hitCount(ArrayList<Unit> unitsOwnedByPlayer) {
         Random rnd = new Random();
         int diceRoll = rnd.nextInt(9) + 1;
         int hit = 0;
-
+        //The rolled number must be greater than the units combat value in order to create a hit
         for (Unit unit : unitsOwnedByPlayer) {
             if (diceRoll >= unit.getCombatValue()) {
                 hit++;
@@ -139,10 +148,10 @@ public class SpaceSystem {
     public void removeUnitAfterHit(int detectedHits, Player inputPlayer) {
         if (!allShipsOwnedByOnePlayerInSystem(inputPlayer).isEmpty()) {
             if (allShipsOwnedByOnePlayerInSystem(inputPlayer).size() >= detectedHits) {
-                for (int i = 0; i < detectedHits; i++) {
+                while(detectedHits > 0) {
                     //removes ship from the back in Array List for each hit
                     getListOfShipsInSystem().remove(allShipsOwnedByOnePlayerInSystem(inputPlayer).size() - 1);
-
+                    detectedHits--;
                 }
             }
         } else {

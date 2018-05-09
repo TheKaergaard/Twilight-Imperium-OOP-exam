@@ -10,6 +10,7 @@ import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
 
 import java.awt.*;
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -17,5 +18,6 @@ import java.util.Set;
 public class Main {
 
     public static void main(String[] args) {
+        System.out.println("Welcome to ");
     }
 }

@@ -13,7 +13,7 @@ public class CustomUnitResourceCostComparator implements Comparator<Unit> {
 
     @Override
     public int compare(Unit unit1, Unit unit2) {
-        //Sorts from highest to lowest
+        //Sorts from highest to lowest resource cost
         Integer rsc1 = unit1.getResourceCost();
         Integer rsc2 = unit2.getResourceCost();
         int cmp = rsc2.compareTo(rsc1);
