@@ -40,10 +40,10 @@ public class SpaceSystem {
         return listOfShipsInSystem;
     }
 
-    //Looks through all units in system and gets the individually players
-    //A players presence in a system is defined by the units
+    //A players presence in a system is defined by the units in the system
     public ArrayList<Player> listOfPlayersInSystem() {
         ArrayList<Player> playersInSystem = new ArrayList<>();
+        //Looks through all units in system and adding their owner to ArrayList if it's not already contained
         for (Unit unit : this.listOfShipsInSystem) {
             if (!playersInSystem.contains(unit.getOwner())) {
                 playersInSystem.add(unit.getOwner());
@@ -72,12 +72,13 @@ public class SpaceSystem {
     public ArrayList<Unit> allShipsOwnedByOnePlayerInSystem(Player inputPlayer) {
         ArrayList<Unit> allShipsInSystem = getListOfShipsInSystem();
         ArrayList<Unit> shipsOwnedByPlayer = new ArrayList<>();
-
+        //If a ships owner correspond to the looked at unit, it's added to ArrayList
         for (Unit ship : allShipsInSystem) {
             if (ship.getOwner().equals(inputPlayer)) {
                 shipsOwnedByPlayer.add(ship);
             }
         }
+        //Each players list of ships are sorted after resource cost (highest to lowest)
         shipsOwnedByPlayer.sort(new CustomUnitResourceCostComparator());
         return shipsOwnedByPlayer;
     }
@@ -86,13 +87,15 @@ public class SpaceSystem {
     public Player playerWhoWonSpaceBattle() {
         int hitCountPlayer1;
         int hitCountPlayer2;
-        Player winningPlayer = new Player();
+        Player winningPlayer;
         ArrayList<Player> playersInSystemInBattle = this.listOfPlayersInSystem();
 
         if (playersInSystemInBattle.size() != 2) {
             throw new InvalidAmountOfPlayersException("System does not only contain 2 players. Space battle can't happen.");
         } else {
+            //Each player must have at least one unit in order to make a space battle
             while (!(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty())) {
+                //Each player gets a hit-value from rolling a 10-sided dice
                 hitCountPlayer1 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)));
                 hitCountPlayer2 = hitCount(allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)));
 
@@ -104,6 +107,7 @@ public class SpaceSystem {
                 System.out.println("Player 1 hits: " + hitCountPlayer1);
                 System.out.println("Player 2 hits: " + hitCountPlayer2);
 
+                //Depending on the amount of rolled hits each player gets to remove a corresponding amount of units from the other player
                 removeUnitAfterHit(hitCountPlayer1, playersInSystemInBattle.get(1));
                 removeUnitAfterHit(hitCountPlayer2, playersInSystemInBattle.get(0));
 
@@ -113,19 +117,19 @@ public class SpaceSystem {
                 System.out.println("System contains now " + getListOfShipsInSystem().size() + " units");
                 System.out.println("------------------------------");
 
-                //If the outcome of a space battle leaves no ships left in the system, the system will remain neutral
                 if ((allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty() && allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty())) {
+                    //Draw
                     return new Player("Both players units got eliminated", "System is therefore neutral", " ");
-                }
-                if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
+                } else if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(1)).isEmpty()) {
+                    //Player 1 is the winning player
                     winningPlayer = playersInSystemInBattle.get(0);
                     return winningPlayer;
-                }
-                if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty()) {
+                } else if (allShipsOwnedByOnePlayerInSystem(playersInSystemInBattle.get(0)).isEmpty()) {
+                    //Player 2 is the winning player
                     winningPlayer = playersInSystemInBattle.get(1);
                     return winningPlayer;
                 }
-
+                //If the outcome of a space battle leaves no ships left in the system, the system will remain neutral
             }
         }
         return new Player("Failure", "Failure", "Failure");
@@ -148,14 +152,16 @@ public class SpaceSystem {
     public void removeUnitAfterHit(int detectedHits, Player inputPlayer) {
         if (!allShipsOwnedByOnePlayerInSystem(inputPlayer).isEmpty()) {
             if (allShipsOwnedByOnePlayerInSystem(inputPlayer).size() >= detectedHits) {
-                while(detectedHits > 0) {
-                    //removes ship from the back in Array List for each hit
-                    getListOfShipsInSystem().remove(allShipsOwnedByOnePlayerInSystem(inputPlayer).size() - 1);
+                while (detectedHits > 0) {
+                    //removes an amount of ships from the input player corresponding to the value of detectedHits (from the other player)
+                    getListOfShipsInSystem().remove(allShipsOwnedByOnePlayerInSystem(inputPlayer).get(allShipsOwnedByOnePlayerInSystem(inputPlayer).size() - 1));
                     detectedHits--;
                 }
             }
-        } else {
-            getListOfShipsInSystem().removeAll(allShipsOwnedByOnePlayerInSystem(inputPlayer));
+            //If the value of detectedHits are greater than the amount of units of a player all units will be removed
+            else {
+                getListOfShipsInSystem().removeAll(allShipsOwnedByOnePlayerInSystem(inputPlayer));
+            }
         }
     }
 

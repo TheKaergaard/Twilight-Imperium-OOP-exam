@@ -10,16 +10,17 @@ import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.*;
-import org.junit.Ignore;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Test;
 
 import java.awt.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class PlayerTest {
 
@@ -39,7 +40,7 @@ class PlayerTest {
         testSystem.listOfShipsInSystem.add(c2);
         testSystem.listOfShipsInSystem.add(d2);
 
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), testSystem);
 
         ArrayList<Unit> sortedListOfPlayerOwnedShips = p1.shipsOwnedByPlayer(p1, testGalaxy);
 
@@ -78,11 +79,11 @@ class PlayerTest {
 
         system05.addShipToSystem(d2);
 
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 1), system01);
-        testGalaxy.setSystemsIntoGalaxy(new Point(1, 0), system02);
-        testGalaxy.setSystemsIntoGalaxy(new Point(-1, 0), system03);
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, -1), system04);
-        testGalaxy.setSystemsIntoGalaxy(new Point(1, 1), system05);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 1), system01);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 0), system02);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, 0), system03);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, -1), system04);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 1), system05);
 
         ArrayList<SpaceSystem> systemsOwnedByFirstPlayer = p2.listOfSystemsOwnedByOnePlayer(testGalaxy);
 
@@ -132,15 +133,12 @@ class PlayerTest {
 
         system04.addShipToSystem(d2);
 
-        temp.setSystemsIntoGalaxy(new Point(0, 1), system01);
-        temp.setSystemsIntoGalaxy(new Point(1, 0), system02);
-        temp.setSystemsIntoGalaxy(new Point(-1, 0), system03);
-        temp.setSystemsIntoGalaxy(new Point(-1, 1), system04);
+        temp.setSystemsIntoHexagonalGridOfSystems(new Point(0, 1), system01);
+        temp.setSystemsIntoHexagonalGridOfSystems(new Point(1, 0), system02);
+        temp.setSystemsIntoHexagonalGridOfSystems(new Point(-1, 0), system03);
+        temp.setSystemsIntoHexagonalGridOfSystems(new Point(-1, 1), system04);
 
-        //Creates ArrayList of systems owned by only one player
-        ArrayList<SpaceSystem> playerOwnedSystems = testPlayer01.listOfSystemsOwnedByOnePlayer(temp);
-
-        //Prints out "playerOwnedSystems" in a text file with each systems corresponding owner
+        //Creates a text file of the systems owned by players. Method takes a galaxy as input
         testPlayer01.createTextFileOfPlayerOwnedPlanets(temp, "test");
 
         //Tests if the correct data is written in the text file
@@ -167,19 +165,5 @@ class PlayerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @Ignore
-    void sortedListOfShipsFromPlayer02() {
-        Player p1 = new Player("Crassus", "The Emirates of Hacan", "Blue");
-        Galaxy testGalaxy = new Galaxy();
-        testGalaxy = testGalaxy.creationOfGalaxyWithPredefinedConfiguration();
-
-        ArrayList<Unit> ships = p1.shipsOwnedByPlayer(p1, testGalaxy);
-
-        for (Unit unit : ships) {
-            System.out.println(unit.getUnitType());
-        }
-
     }
 }

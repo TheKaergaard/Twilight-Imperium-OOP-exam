@@ -13,7 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SpaceSystemTest {
     private SpaceSystem testSystem = new SpaceSystem();
@@ -27,9 +28,22 @@ class SpaceSystemTest {
     private Cruiser c2 = new Cruiser(p2);
 
     @Test
+    void whenGettingListOfPlayersInSystem() {
+        testSystem.addShipToSystem(d1);
+        testSystem.addShipToSystem(c1);
+        testSystem.addShipToSystem(d2);
+        testSystem.addShipToSystem(c2);
+
+        assertEquals(2, testSystem.listOfPlayersInSystem().size());
+        assertEquals(p1, testSystem.listOfPlayersInSystem().get(0));
+        assertEquals(p2, testSystem.listOfPlayersInSystem().get(1));
+    }
+
+    @Test
     void whenAddingShipsToSystem() {
         testSystem.addShipToSystem(d1);
         assertTrue(testSystem.getListOfShipsInSystem().contains(d1));
+        assertEquals(1, testSystem.listOfShipsInSystem.size());
     }
 
     @Test
@@ -43,29 +57,14 @@ class SpaceSystemTest {
     void whenGettingAllShipsInSystem() {
         testSystem.addShipToSystem(d1);
         testSystem.addShipToSystem(c1);
-        ArrayList<Unit> temp = testSystem.getListOfShipsInSystem();
-        assertEquals(Unit.Type.DREADNOUGHT, temp.get(0).getUnitType());
-        assertEquals(Unit.Type.CRUISER, temp.get(1).getUnitType());
+
+        assertEquals(Unit.Type.DREADNOUGHT, testSystem.getListOfShipsInSystem().get(0).getUnitType());
+        assertEquals(Unit.Type.CRUISER, testSystem.getListOfShipsInSystem().get(1).getUnitType());
+        assertEquals(2, testSystem.listOfShipsInSystem.size());
     }
 
     @Test
-    void whenGettingAllPlayersInSystem() {
-        SpaceSystem testSystem = new SpaceSystem();
-
-        testSystem.addShipToSystem(d1);
-        testSystem.addShipToSystem(c1);
-        testSystem.addShipToSystem(d2);
-        testSystem.addShipToSystem(c2);
-
-        ArrayList<Player> listOfPlayersInSystem = testSystem.listOfPlayersInSystem();
-
-        assertEquals(2, listOfPlayersInSystem.size());
-        assertEquals(p1, listOfPlayersInSystem.get(0));
-        assertEquals(p2, listOfPlayersInSystem.get(1));
-    }
-
-    @Test
-    void whenGettingAllShipsOwnedByOnePlayer() {
+    void whenGettingAllShipsOwnedByOnePlayerInSystem() {
         testSystem.addShipToSystem(d1);
         testSystem.addShipToSystem(c1);
         testSystem.addShipToSystem(d2);
@@ -106,16 +105,16 @@ class SpaceSystemTest {
         testSystem.addShipToSystem(d2);
         testSystem.addShipToSystem(c2);
 
-        ArrayList<Unit> test = testSystem.allShipsOwnedByOnePlayerInSystem(p1);
-
         //When the value of detected hits is one it should therefore remove one unit
         testSystem.removeUnitAfterHit(1, p1);
+        testSystem.removeUnitAfterHit(2, p2);
         //Each player has two units and when removing one, the size should be 1
         assertEquals(1, testSystem.allShipsOwnedByOnePlayerInSystem(p1).size());
+        assertEquals(0, testSystem.allShipsOwnedByOnePlayerInSystem(p2).size());
     }
 
     @Test
-    void whenCreatingASpaceBattleFindTheWinningPlayer() {
+    void simulationOfSpaceBattleBetweenTwoPlayersWithTwoShipsEach() {
         testSystem.addShipToSystem(d1);
         testSystem.addShipToSystem(c1);
         testSystem.addShipToSystem(d2);

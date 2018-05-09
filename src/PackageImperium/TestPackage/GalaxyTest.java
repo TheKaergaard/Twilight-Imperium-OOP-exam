@@ -5,21 +5,17 @@ package PackageImperium.TestPackage;
  * skarga17@student.aau.dk
  */
 
-import PackageImperium.Player;
 import PackageImperium.Space.Galaxy;
 import PackageImperium.Space.Planet;
 import PackageImperium.Space.SpaceSystem;
 import PackageImperium.Units.*;
-import org.junit.Ignore;
 import org.junit.jupiter.api.Test;
 
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class GalaxyTest {
@@ -28,7 +24,36 @@ class GalaxyTest {
     private SpaceSystem testSystem02 = new SpaceSystem();
 
     @Test
-    void whenGettingAllShipsInGalaxy() {
+    void whenGettingListOfSystemsInGalaxy() {
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), testSystem01);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 1), testSystem02);
+
+        assertTrue(!testGalaxy.listOfSystemsInGalaxy().isEmpty());
+        assertEquals(2, testGalaxy.listOfSystemsInGalaxy().size());
+        assertEquals(testSystem01, testGalaxy.listOfSystemsInGalaxy().get(0));
+        assertEquals(testSystem02, testGalaxy.listOfSystemsInGalaxy().get(1));
+    }
+
+    @Test
+    void whenGettingListOfPlanetsInGalaxy() {
+        Planet testPlanet01 = new Planet("Test Planet 1");
+        Planet testPlanet02 = new Planet("Test Planet 2");
+        Planet testPlanet03 = new Planet("Test Planet 3");
+
+        testSystem01.listOfPlanetsInSystem.add(testPlanet01);
+        testSystem01.listOfPlanetsInSystem.add(testPlanet02);
+        testSystem01.listOfPlanetsInSystem.add(testPlanet03);
+
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), testSystem01);
+
+        assertTrue(!testGalaxy.listOfPlanetsInGalaxy().isEmpty());
+        assertEquals(testPlanet01, testGalaxy.listOfPlanetsInGalaxy().get(0));
+        assertEquals(testPlanet02, testGalaxy.listOfPlanetsInGalaxy().get(1));
+        assertEquals(testPlanet03, testGalaxy.listOfPlanetsInGalaxy().get(2));
+    }
+
+    @Test
+    void whenGettingListOfAllShipsInGalaxy() {
         Destroyer d1 = new Destroyer();
         Cruiser c1 = new Cruiser();
         Dreadnought d2 = new Dreadnought();
@@ -36,38 +61,25 @@ class GalaxyTest {
 
         testSystem01.listOfShipsInSystem.add(d1);
         testSystem01.listOfShipsInSystem.add(c1);
-        testSystem01.listOfShipsInSystem.add(d2);
-        testSystem01.listOfShipsInSystem.add(c2);
+        testSystem02.listOfShipsInSystem.add(d2);
+        testSystem02.listOfShipsInSystem.add(c2);
+        //The units are put into two different systems in the galaxy
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), testSystem01);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 1), testSystem02);
 
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem01);
+        assertTrue(!testGalaxy.listOfShipsInGalaxy().isEmpty());
+        assertEquals(4, testGalaxy.listOfShipsInGalaxy().size());
 
-        ArrayList<Unit> shipsInTestGalaxy = testGalaxy.listOfShipsInGalaxy();
-
-        assertTrue(!shipsInTestGalaxy.isEmpty());
-        assertEquals(4, shipsInTestGalaxy.size());
-
-        assertEquals(d1, shipsInTestGalaxy.get(0));
-        assertEquals(c1, shipsInTestGalaxy.get(1));
-        assertEquals(d2, shipsInTestGalaxy.get(2));
-        assertEquals(c2, shipsInTestGalaxy.get(3));
-    }
-
-    @Test
-    void gettingListOfSystemsInGalaxy() {
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem01);
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 1), testSystem02);
-
-        assertTrue(!testGalaxy.listOfSystemsInGalaxy().isEmpty());
-        //testing for size and systems in the returned ArrayList
-        assertEquals(2, testGalaxy.listOfSystemsInGalaxy().size());
-        assertEquals(testSystem01, testGalaxy.listOfSystemsInGalaxy().get(0));
-        assertEquals(testSystem02, testGalaxy.listOfSystemsInGalaxy().get(1));
+        assertEquals(d1, testGalaxy.listOfShipsInGalaxy().get(0));
+        assertEquals(c1, testGalaxy.listOfShipsInGalaxy().get(1));
+        assertEquals(d2, testGalaxy.listOfShipsInGalaxy().get(2));
+        assertEquals(c2, testGalaxy.listOfShipsInGalaxy().get(3));
     }
 
     @Test
     void positionOfSystemsNorthAndSouth() {
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem01);
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, -1), testSystem02);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), testSystem01);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, -1), testSystem02);
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
         //Testing if (0, -1) compared to (0,0) is the northern system. If true the opposite must be south.
         assertEquals(testSystem01, testSystem02.getHexagonalGrid().get(SpaceSystem.Position.NORTH));
@@ -76,8 +88,8 @@ class GalaxyTest {
 
     @Test
     void positionOfSystemsNorthEastAndSouthWest() {
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem01);
-        testGalaxy.setSystemsIntoGalaxy(new Point(-1, -1), testSystem02);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), testSystem01);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, -1), testSystem02);
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
         //Testing if (-1, -1) compared to (0,0) is north eastern system. If true the opposite must be south west.
         assertEquals(testSystem01, testSystem02.getHexagonalGrid().get(SpaceSystem.Position.NORTH_EAST));
@@ -86,8 +98,8 @@ class GalaxyTest {
 
     @Test
     void positionOfSystemsNorthWestAndSouthEast() {
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), testSystem01);
-        testGalaxy.setSystemsIntoGalaxy(new Point(1, 0), testSystem02);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), testSystem01);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 0), testSystem02);
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
         //Testing if (1, 0) compared to (0,0) is north western system. If true the opposite must be south east.
         assertEquals(testSystem01, testSystem02.getHexagonalGrid().get(SpaceSystem.Position.NORTH_WEST));
@@ -98,12 +110,13 @@ class GalaxyTest {
     void creationOfGalaxyWithPlayers() {
         Galaxy testGalaxyWithPlayers = testGalaxy.creationOfGalaxyWithPredefinedConfiguration();
         HashMap<Point, SpaceSystem> systemsInTestGalaxy = testGalaxyWithPlayers.getHexagonalGridOfSystems();
-        Set<Point> keyset = systemsInTestGalaxy.keySet();
 
         assertTrue(systemsInTestGalaxy.containsKey(new Point(0, 0)));
         assertEquals(7, systemsInTestGalaxy.size());
         assertEquals(6, testGalaxyWithPlayers.listOfShipsInGalaxy().size());
         assertEquals(7, testGalaxyWithPlayers.listOfPlanetsInGalaxy().size());
+
+        //assertEquals("Mecatol Rex", testGalaxy.getHexagonalGridOfSystems().get(new Point(0,0)).listOfPlanetsInSystem.get(0).planetName);
     }
 
     @Test
@@ -129,18 +142,19 @@ class GalaxyTest {
         testSystem03.listOfPlanetsInSystem.add(planet04);
         //testSystem03.listOfPlanetsInSystem.add(planet04);
 
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 0), centerSystem);
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, 1), testSystem02);
-        testGalaxy.setSystemsIntoGalaxy(new Point(1, 1), testSystem03);
-        testGalaxy.setSystemsIntoGalaxy(new Point(1, 0), testSystem04);
-        testGalaxy.setSystemsIntoGalaxy(new Point(0, -1), testSystem05);
-        testGalaxy.setSystemsIntoGalaxy(new Point(-1, -1), testSystem06);
-        testGalaxy.setSystemsIntoGalaxy(new Point(-1, 0), testSystem07);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), centerSystem);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 1), testSystem02);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 1), testSystem03);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 0), testSystem04);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, -1), testSystem05);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, -1), testSystem06);
+        testGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, 0), testSystem07);
 
         testGalaxy.createHexagonalGridOfSystems(testGalaxy.getHexagonalGridOfSystems());
         //Testing if the created test galaxy is legal
         assertTrue(testGalaxy.checkForPropertiesOfLegalGalaxy());
     }
+
     @Test
     void whenGeneratingRandomUnits() {
         ArrayList<Unit> listOfRandomUnits = testGalaxy.generateRandomUnits();
@@ -164,24 +178,12 @@ class GalaxyTest {
 
     @Test
     void whenGeneratingARandomGalaxy() {
-        Galaxy randomGeneratedGalaxy = testGalaxy.constructRandomGalaxy();
-        //Testing if the galaxy has 7 systems
-        assertEquals(7, randomGeneratedGalaxy.getHexagonalGridOfSystems().size());
-    }
-
-    @Ignore
-    void testingIfRandomGeneratedGalaxyIsLegal() {
-        Galaxy randomTestGalaxy = new Galaxy();
-        SpaceSystem foo = new SpaceSystem();
-
-        Player temp = randomTestGalaxy.generateRandomPlayer();
-        randomTestGalaxy = randomTestGalaxy.constructRandomGalaxy();
-        ArrayList<Unit> foo2 = randomTestGalaxy.generateRandomUnits();
-        ArrayList<Planet> foo3 = randomTestGalaxy.generateRandomPlanets();
+        Galaxy randomTestGalaxy = testGalaxy.constructRandomGalaxy();
 
         assertEquals(7, randomTestGalaxy.getHexagonalGridOfSystems().size());
         assertTrue(!randomTestGalaxy.listOfSystemsInGalaxy().isEmpty());
         assertTrue(!randomTestGalaxy.listOfPlanetsInGalaxy().isEmpty());
+        assertTrue(!randomTestGalaxy.listOfShipsInGalaxy().isEmpty());
 
         assertTrue(randomTestGalaxy.checkForPropertiesOfLegalGalaxy());
     }

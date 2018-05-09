@@ -5,7 +5,9 @@ package PackageImperium.Space;
  * skarga17@student.aau.dk
  */
 
-import PackageImperium.CustomExceptions.CustomException01;
+import PackageImperium.CustomExceptions.CenterSystemPlanetException;
+import PackageImperium.CustomExceptions.PlanetDuplicateException;
+import PackageImperium.CustomExceptions.TooManyPlanetsInSystemException;
 import PackageImperium.Player;
 import PackageImperium.Units.*;
 
@@ -18,7 +20,7 @@ public class Galaxy {
     public Galaxy() {
     }
 
-    public void setSystemsIntoGalaxy(Point inputPos, SpaceSystem inputSystem) {
+    public void setSystemsIntoHexagonalGridOfSystems(Point inputPos, SpaceSystem inputSystem) {
         this.hexagonalGridOfSystems.put(inputPos, inputSystem);
     }
 
@@ -26,14 +28,11 @@ public class Galaxy {
         return hexagonalGridOfSystems;
     }
 
-    //Returning an ArrayList of all units/ships in the given galaxy
-    public ArrayList<Unit> listOfShipsInGalaxy() {
-        ArrayList<SpaceSystem> systems = listOfSystemsInGalaxy();
-        ArrayList<Unit> units = new ArrayList<>();
-        for (SpaceSystem temp : systems) {
-            units.addAll(temp.getListOfShipsInSystem());
-        }
-        return units;
+    //Returning an ArrayList of all systems in the given galaxy
+    public ArrayList<SpaceSystem> listOfSystemsInGalaxy() {
+        ArrayList<SpaceSystem> allSystemsInGalaxy = new ArrayList<>();
+        allSystemsInGalaxy.addAll(this.hexagonalGridOfSystems.values());
+        return allSystemsInGalaxy;
     }
 
     //Returning an ArrayList of all planets in the given galaxy
@@ -45,11 +44,14 @@ public class Galaxy {
         return planets;
     }
 
-    //Returning an ArrayList of all systems in the given galaxy
-    public ArrayList<SpaceSystem> listOfSystemsInGalaxy() {
-        ArrayList<SpaceSystem> allSystemsInGalaxy = new ArrayList<>();
-        allSystemsInGalaxy.addAll(this.hexagonalGridOfSystems.values());
-        return allSystemsInGalaxy;
+    //Returning an ArrayList of all units/ships in the given galaxy
+    public ArrayList<Unit> listOfShipsInGalaxy() {
+        ArrayList<SpaceSystem> systems = listOfSystemsInGalaxy();
+        ArrayList<Unit> units = new ArrayList<>();
+        for (SpaceSystem temp : systems) {
+            units.addAll(temp.getListOfShipsInSystem());
+        }
+        return units;
     }
 
     /*
@@ -144,13 +146,13 @@ public class Galaxy {
         northSystem.listOfShipsInSystem.add(cruiser02);
         northSystem.listOfShipsInSystem.add(carrier01);
 
-        predefinedGalaxy.setSystemsIntoGalaxy(new Point(0, 0), centerSystem);
-        predefinedGalaxy.setSystemsIntoGalaxy(new Point(0, 1), northSystem);
-        predefinedGalaxy.setSystemsIntoGalaxy(new Point(1, 1), northEastSystem);
-        predefinedGalaxy.setSystemsIntoGalaxy(new Point(1, 0), southEastSystem);
-        predefinedGalaxy.setSystemsIntoGalaxy(new Point(0, -1), southSystem);
-        predefinedGalaxy.setSystemsIntoGalaxy(new Point(-1, -1), southWestSystem);
-        predefinedGalaxy.setSystemsIntoGalaxy(new Point(-1, 0), northWestSystem);
+        predefinedGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), centerSystem);
+        predefinedGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 1), northSystem);
+        predefinedGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 1), northEastSystem);
+        predefinedGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 0), southEastSystem);
+        predefinedGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, -1), southSystem);
+        predefinedGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, -1), southWestSystem);
+        predefinedGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, 0), northWestSystem);
 
         //Putting the above created systems into hexagonal grid by coordinates
         predefinedGalaxy.createHexagonalGridOfSystems(predefinedGalaxy.getHexagonalGridOfSystems());
@@ -167,7 +169,7 @@ public class Galaxy {
             //Checks if every system has at most three planets
             if (legalHexagonalGrid.get(temp).listOfPlanetsInSystem.size() > 3) {
                 try {
-                    throw new IndexOutOfBoundsException("Too many planets in system");
+                    throw new TooManyPlanetsInSystemException("Too many planets in system. Max is 3");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -177,7 +179,7 @@ public class Galaxy {
                 //Checks if the center system only contains exactly one planet named Mecatol Rex
                 if (!((legalHexagonalGrid.get(temp).listOfPlanetsInSystem.size() == 1) && (legalHexagonalGrid.get(temp).listOfPlanetsInSystem.get(0).getPlanetName().equals("Mecatol Rex")))) {
                     try {
-                        throw new CustomException01("Center system contains other planets than Mecatol Rex");
+                        throw new CenterSystemPlanetException("Center system contains other planets than Mecatol Rex");
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -188,7 +190,7 @@ public class Galaxy {
         for (Planet temp : this.listOfPlanetsInGalaxy()) {
             if (!noDuplicateSet.add(temp)) {
                 try {
-                    throw new CustomException01("Planet " + temp.getPlanetName() + " occurs multiple times");
+                    throw new PlanetDuplicateException("Planet " + temp.getPlanetName() + " occurs multiple times");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -197,7 +199,7 @@ public class Galaxy {
         return true;
     }
 
-    public Player generateRandomPlayer() {
+    private Player generateRandomPlayer() {
         Player randomPlayer = new Player();
         Random rnd = new Random();
         int amountOfPlayers = rnd.nextInt(4) + 2;
@@ -283,13 +285,13 @@ public class Galaxy {
         SpaceSystem randomSystem06 = generateRandomSystem();
 
         //Adding all random generated systems to Galaxy HashMap
-        randomGalaxy.setSystemsIntoGalaxy(new Point(0, 0), centerSystem);
-        randomGalaxy.setSystemsIntoGalaxy(new Point(0, 1), randomSystem01);
-        randomGalaxy.setSystemsIntoGalaxy(new Point(1, 1), randomSystem02);
-        randomGalaxy.setSystemsIntoGalaxy(new Point(1, -1), randomSystem03);
-        randomGalaxy.setSystemsIntoGalaxy(new Point(0, -1), randomSystem04);
-        randomGalaxy.setSystemsIntoGalaxy(new Point(-1, -1), randomSystem05);
-        randomGalaxy.setSystemsIntoGalaxy(new Point(-1, 1), randomSystem06);
+        randomGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 0), centerSystem);
+        randomGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, 1), randomSystem01);
+        randomGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, 1), randomSystem02);
+        randomGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(1, -1), randomSystem03);
+        randomGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(0, -1), randomSystem04);
+        randomGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, -1), randomSystem05);
+        randomGalaxy.setSystemsIntoHexagonalGridOfSystems(new Point(-1, 1), randomSystem06);
 
         randomGalaxy.createHexagonalGridOfSystems(randomGalaxy.getHexagonalGridOfSystems());
 

@@ -5,9 +5,9 @@ package PackageImperium.CustomExceptions;
  * skarga17@student.aau.dk
  */
 
-public class CustomException01 extends RuntimeException {
+public class CenterSystemPlanetException extends RuntimeException {
 
-    public CustomException01(String exceptionMessage) {
+    public CenterSystemPlanetException(String exceptionMessage) {
         super(exceptionMessage);
     }
 }

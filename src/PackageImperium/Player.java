@@ -27,6 +27,7 @@ public class Player extends CustomUnitComparator {
         this.uniqueRace = uniqueRace;
         this.uniqueColour = uniqueColour;
     }
+
     public void setPlayerName(String playerName) {
         this.playerName = playerName;
     }
@@ -40,7 +41,6 @@ public class Player extends CustomUnitComparator {
     }
 
     public String getPlayerName() {
-
         return playerName;
     }
 
@@ -61,6 +61,7 @@ public class Player extends CustomUnitComparator {
                 shipsOwnedByInputPlayer.add(ship);
             }
         }
+        //The ArrayList of ships gets sorted after combat value and then resource cost using the CustomUnitComparator
         shipsOwnedByInputPlayer.sort(new CustomUnitComparator());
 
         return shipsOwnedByInputPlayer;
@@ -81,7 +82,9 @@ public class Player extends CustomUnitComparator {
                     isOwned = true;
                 } else if (unit.getOwner().equals(onlyPlayerInSystem)) {
                     isOwned = true;
-                } else {
+                }
+                //if a unit with a different owner is found false will be returned
+                else {
                     isOwned = false;
                     break;
                 }
@@ -97,13 +100,15 @@ public class Player extends CustomUnitComparator {
         Player tempPlayer = new Player();
         ArrayList<SpaceSystem> playerOwnedSystems = tempPlayer.listOfSystemsOwnedByOnePlayer(inputGalaxy);
 
-        File textfile = new File("src/PackageImperium/"+fileName+".txt");
+        File textfile = new File("src/PackageImperium/" + fileName + ".txt");
         //Try with resources closes the writer automatically
-        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/"+fileName+".txt", true)))) {
+        try (PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("src/PackageImperium/" + fileName + ".txt", true)))) {
             for (SpaceSystem temp : playerOwnedSystems) {
+                //Writes the owner of the system
                 out.write(temp.getListOfShipsInSystem().get(0).getOwner().toString() + "\n");
+                //Writes all planets contained in the owned system
                 for (int i = 0; i < temp.listOfPlanetsInSystem.size(); i++) {
-                    out.write("\t"+temp.listOfPlanetsInSystem.get(i).planetName + "\n");
+                    out.write("\t" + temp.listOfPlanetsInSystem.get(i).planetName + "\n");
                 }
             }
         } catch (IOException e) {

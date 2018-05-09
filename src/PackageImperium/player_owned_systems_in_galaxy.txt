@@ -1,5 +1,0 @@
-Player{playerName='test1', uniqueRace='test1', uniqueColour='test1'}
-	Planet1
-	Planet2
-Player{playerName='test2', uniqueRace='test2', uniqueColour='test2'}
-	Planet7
